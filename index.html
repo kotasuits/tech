@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberPrint // Tech Label Engine</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&family=Roboto:wght@400;700&family=Inter:wght@400;600;700&family=DM+Sans:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #060913;
+      --bg-card: rgba(10, 16, 32, 0.82);
+      --card-border: rgba(0, 240, 255, 0.18);
+      --card-hover-border: rgba(0, 240, 255, 0.55);
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.35);
+      --green: #00ff9d;
+      --green-glow: rgba(0, 255, 157, 0.35);
+      --purple: #a855f7;
+      --text: #f1f5f9;
+      --text-dim: #94a3b8;
+      --text-muted: #64748b;
+      --danger: #ff3366;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 240, 255, 0.12), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(168, 85, 247, 0.14), transparent 60%);
+      background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 20px 60px;
+    }
+
+    /* Cyber Header */
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .hud-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 1.6s infinite ease-in-out;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+
+    header h1 {
+      font-size: clamp(1.7rem, 4.2vw, 2.7rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #00f0ff 0%, #38bdf8 50%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-top: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #93c5fd;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 18px;
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 8px;
+      background: rgba(10, 16, 32, 0.7);
+      backdrop-filter: blur(12px);
+      transition: all 0.22s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    nav a:hover,
+    nav a.on {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: #ffffff;
+      box-shadow: 0 0 16px var(--cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    /* Cyber Toolbar */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      border-radius: 14px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.02);
+      position: relative;
+    }
+
+    .toolbar::before {
+      content: 'CONTROL // HUD';
+      position: absolute;
+      top: -9px;
+      left: 20px;
+      background: #060913;
+      padding: 0 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      border-left: 2px solid var(--cyan);
+      border-right: 2px solid var(--cyan);
+    }
+
+    .divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(0, 240, 255, 0.18);
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-default {
+      background: rgba(0, 240, 255, 0.08);
+      color: var(--cyan);
+      border-color: rgba(0, 240, 255, 0.25);
+    }
+
+    .btn-default:hover {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--cyan);
+      color: white;
+      box-shadow: 0 0 12px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, #00ff9d, #059669);
+      color: #042217;
+      border-color: #00ff9d;
+      font-weight: 800;
+      box-shadow: 0 0 18px var(--green-glow);
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 26px var(--green-glow);
+      filter: brightness(1.1);
+    }
+
+    .btn-pdf {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-pdf:hover {
+      background: rgba(56, 189, 248, 0.28);
+      border-color: #38bdf8;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #00f0ff, #a855f7);
+      color: #04091a;
+      font-weight: 800;
+      border: none;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+      filter: brightness(1.1);
+    }
+
+    select {
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      background: #090e1a;
+      color: var(--cyan);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    select:hover, select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    select option {
+      background: #090e1a;
+      color: white;
+    }
+
+    /* Grid & Cyber Address Cards */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .addr-box {
+      width: calc(33.33% - 14px);
+      min-width: 310px;
+      background: var(--bg-card);
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--cyan);
+      border-radius: 14px;
+      padding: 50px 16px 16px;
+      position: relative;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .addr-box:hover {
+      border-color: var(--card-hover-border);
+      border-left-color: var(--green);
+      box-shadow: 0 12px 35px rgba(0, 240, 255, 0.12), 0 0 20px rgba(0, 240, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .box-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.14);
+      background: rgba(0, 240, 255, 0.03);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .kdo-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      color: #c4b5fd;
+      background: rgba(168, 85, 247, 0.18);
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      cursor: pointer;
+      padding: 3px 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .kdo-btn:hover {
+      background: rgba(168, 85, 247, 0.35);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+    }
+
+    .box-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .lock-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lock-btn:hover {
+      background: rgba(56, 189, 248, 0.3);
+      color: white;
+    }
+
+    .del-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 51, 102, 0.4);
+      background: rgba(255, 51, 102, 0.1);
+      color: #fda4af;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .del-btn:hover {
+      background: rgba(255, 51, 102, 0.35);
+      color: white;
+      box-shadow: 0 0 10px rgba(255, 51, 102, 0.4);
+    }
+
+    /* CYBER UNIQUE CODE BAR */
+    .box-code-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 240, 255, 0.06);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 8px;
+      padding: 7px 11px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .code-label-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-title {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .box-unique-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 1px;
+      user-select: all;
+      text-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    .regen-btn {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      color: var(--cyan);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .regen-btn:hover {
+      background: rgba(0, 240, 255, 0.25);
+      border-color: var(--cyan);
+      color: white;
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    .editable {
+      width: 100%;
+      min-height: 110px;
+      max-height: 300px;
+      overflow-y: auto;
+      word-wrap: break-word;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      background: #ffffff;
+      color: #0f172a;
+      line-height: 1.6;
+      transition: all 0.2s;
+    }
+
+    .editable:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.25);
+    }
+
+    .editable[contenteditable="false"] {
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    .empty-state {
+      width: 100%;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .empty-state .icon {
+      font-size: 3.2rem;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 15px var(--cyan-glow));
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 14px 12px 50px;
+      }
+
+      .addr-box {
+        width: 100%;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .btn {
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      select {
+        font-size: 12px;
+        padding: 7px 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="hud-badge"><span class="hud-pulse"></span> SYSTEM ACTIVE // LOGISTICS OS v4.2</div>
+    <h1>⚡ CYBERPRINT // LABEL ENGINE</h1>
+    <p>TECH-POWERED DISPATCH // HIGH-PRECISION RECIPIENT &amp; DYNAMIC QR SUITE</p>
+  </header>
+
+  <nav>
+    <a href="index.html" class="on">📄 Labels</a>
+    <a href="scanner.html">🔍 Scanner</a>
+    <a href="dispatched.html">📋 Dispatched</a>
+    <a href="../uploads.html">📸 Upload Tracking</a>
+    <a href="../search.html">🔎 Search Photos</a>
+  </nav>
+
+  <div class="toolbar">
+
+    <button class="btn btn-add" onclick="addBox()">&#10133; NEW PARCEL</button>
+
+    <div class="divider"></div>
+
+    <select id="fontFamily" onchange="applyFont()">
+      <option value="Poppins" selected>Poppins</option>
+      <option value="Roboto">Roboto</option>
+      <option value="Inter">Inter</option>
+      <option value="DM Sans">DM Sans</option>
+      <option value="JetBrains Mono">JetBrains Mono</option>
+      <option value="Space Grotesk">Space Grotesk</option>
+      <option value="Outfit">Outfit</option>
+      <option value="Montserrat">Montserrat</option>
+      <option value="Open Sans">Open Sans</option>
+      <option value="Lato">Lato</option>
+      <option value="Raleway">Raleway</option>
+      <option value="Nunito">Nunito</option>
+      <option value="Oswald">Oswald</option>
+      <option value="Work Sans">Work Sans</option>
+      <option value="Barlow">Barlow</option>
+      <option value="Dancing Script">Dancing Script</option>
+      <option value="Arial">Arial</option>
+      <option value="Segoe UI">Segoe UI</option>
+    </select>
+
+    <select id="pageSize">
+      <option value="A4">A4 [Sheet]</option>
+      <option value="A5">A5 [Standard]</option>
+      <option value="A6" selected>A6 [Thermal/Pocket]</option>
+    </select>
+
+    <div class="divider"></div>
+
+    <button class="btn btn-default" onclick="alignAll('left')">Left</button>
+    <button class="btn btn-default" onclick="alignAll('right')">Right</button>
+    <button class="btn btn-default" onclick="changeFontSize(1)">A+</button>
+    <button class="btn btn-default" onclick="changeFontSize(-1)">A-</button>
+    <button class="btn btn-default" onclick="document.execCommand('bold')"><b>Bold</b></button>
+
+    <div class="divider"></div>
+
+    <button class="btn btn-pdf" onclick="generatePDF()">💾 EXPORT PDF</button>
+    <button class="btn btn-print" onclick="printAddresses()">&#128424; PRINT DISPATCH</button>
+
+  </div>
+
+  <div id="grid" class="grid">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">📦</div>
+      <p>CLICK <strong>[ NEW PARCEL ]</strong> TO INITIALIZE DISPATCH CARD</p>
+    </div>
+  </div>
+
+  <script>
+    /* ============================================================
+       1. UNIQUE TRACKING ID GENERATOR
+       Generates a clean, unique tracking code: TRK-YYMMDD-XXXX
+    ============================================================ */
+    function generateUniqueId() {
+      var d = new Date();
+      var yymmdd = d.getFullYear().toString().slice(-2) +
+                   String(d.getMonth() + 1).padStart(2, '0') +
+                   String(d.getDate()).padStart(2, '0');
+      var rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+      var timeMs = Date.now().toString(36).slice(-2).toUpperCase();
+      return 'TRK-' + yymmdd + '-' + rand + timeMs;
+    }
+
+    /* ============================================================
+       2. 100% SYNCHRONOUS & RELIABLE QR CODE GENERATOR
+       Generates PNG DataURL synchronously without timeouts
+    ============================================================ */
+    function generateQRDataUrl(text) {
+      if (!text) return '';
+      try {
+        var tempDiv = document.createElement('div');
+        new QRCode(tempDiv, {
+          text: String(text).trim(),
+          width: 256,
+          height: 256,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        var canvas = tempDiv.querySelector('canvas');
+        if (canvas) return canvas.toDataURL('image/png');
+        var img = tempDiv.querySelector('img');
+        if (img && img.src) return img.src;
+      } catch (e) {
+        console.error('QR Generation Error:', e);
+      }
+      return '';
+    }
+
+    /* ============================================================
+       BUILD QR PAYLOAD: Customer Name (1st line), Phone, Pincode & Unique ID
+    ============================================================ */
+    function buildQRPayload(plainText, uniqueId) {
+      if (!plainText || plainText === '[Empty Address Card]') {
+        return uniqueId || '';
+      }
+
+      // 1. Extract phone number (Indian mobile)
+      var phoneMatch = plainText.match(/(?:(?:\+|00)?91[\s-]?)?(?:0[\s-]?)?\b([6-9]\d{4}[\s-]?\d{5}|[6-9]\d{9}|\d{10})\b/);
+      var phone = phoneMatch ? phoneMatch[1].replace(/\D/g, '').slice(-10) : '';
+
+      // 2. Extract 6-digit pincode
+      var pinMatch = plainText.match(/\b([1-9]\d{5})\b/);
+      var pincode = pinMatch ? pinMatch[1] : '';
+
+      // 3. Extract first non-empty line as customer name
+      var name = '';
+      var lines = plainText.split('\n');
+      for (var i = 0; i < lines.length; i++) {
+        var l = lines[i].trim();
+        if (l) {
+          name = l;
+          break;
+        }
+      }
+
+      // 4. Combine: Customer Name + Phone + Pincode + Unique Tracking ID
+      var parts = [];
+      if (name) parts.push(name);
+      if (phone) parts.push(phone);
+      if (pincode) parts.push(pincode);
+      if (uniqueId) parts.push(uniqueId);
+
+      return parts.join(' ').trim() || uniqueId || '';
+    }
+
+    /* ============================================================
+       3. ADD ADDRESS BOX (Displays Unique Code clearly on each card)
+    ============================================================ */
+    function addBox() {
+      var es = document.getElementById('emptyState');
+      if (es) es.remove();
+      var grid = document.getElementById('grid');
+      var box = document.createElement('div');
+      box.className = 'addr-box';
+      
+      var uid = generateUniqueId();
+
+      box.innerHTML =
+        '<div class="box-topbar">' +
+          '<button class="kdo-btn" onclick="toggleKdo(this)">KDO</button>' +
+          '<div class="box-actions">' +
+            '<button class="lock-btn" onclick="toggleLock(this)">LOCK</button>' +
+            '<button class="del-btn"  onclick="removeBox(this)">PURGE</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="box-code-bar">' +
+          '<div class="code-label-group">' +
+            '<span class="code-title">&#128230; TRACK ID:</span>' +
+            '<strong class="box-unique-code">' + uid + '</strong>' +
+          '</div>' +
+          '<button class="regen-btn" onclick="regenBoxId(this)" title="Generate new unique ID">&#8635; REGEN</button>' +
+        '</div>' +
+        '<div class="editable" contenteditable="true" style="font-size:16px;font-family:Poppins,sans-serif;" placeholder="Paste recipient address here..."></div>';
+
+      grid.appendChild(box);
+      box.querySelector('.editable').focus();
+    }
+
+    // Refresh unique ID manually on any individual box
+    function regenBoxId(btn) {
+      var codeElem = btn.closest('.addr-box').querySelector('.box-unique-code');
+      if (codeElem) {
+        codeElem.textContent = generateUniqueId();
+      }
+    }
+
+    function removeBox(btn) {
+      var box = btn.closest('.addr-box');
+      box.style.transition = 'all 0.18s';
+      box.style.opacity = '0';
+      box.style.transform = 'scale(0.93)';
+      setTimeout(function () {
+        box.remove();
+        if (!document.querySelector('.addr-box')) {
+          document.getElementById('grid').innerHTML =
+            '<div class="empty-state" id="emptyState"><div class="icon">📦</div>' +
+            '<p>CLICK <strong>[ NEW PARCEL ]</strong> TO INITIALIZE DISPATCH CARD</p></div>';
+        }
+      }, 180);
+    }
+
+    function toggleLock(btn) {
+      var ed = btn.closest('.addr-box').querySelector('.editable');
+      var locked = ed.contentEditable === 'false';
+      ed.contentEditable = locked ? 'true' : 'false';
+      btn.textContent = locked ? 'LOCK' : 'UNLOCK';
+    }
+
+    function toggleKdo(btn) {
+      btn.textContent = btn.textContent.trim() === 'KDO' ? 'KZO' : 'KDO';
+    }
+
+    function applyFont() {
+      var font = document.getElementById('fontFamily').value;
+      document.querySelectorAll('.editable').forEach(function (el) {
+        el.style.fontFamily = font;
+      });
+    }
+
+    function alignAll(dir) {
+      document.querySelectorAll('.editable').forEach(function (el) {
+        el.style.textAlign = dir;
+      });
+    }
+
+    function changeFontSize(delta) {
+      document.querySelectorAll('.editable').forEach(function (el) {
+        var cur = parseInt(window.getComputedStyle(el).fontSize);
+        var next = cur + delta;
+        if (next >= 10 && next <= 60) el.style.fontSize = next + 'px';
+      });
+    }
+
+    /* ============================================================
+       4. FUTURISTIC TECH PRINT LAYOUT
+       - Crisp high-tech logistics template with aerospace tech borders
+       - Compartmentalized Destination & Verification Matrix
+       - Integrated QR code with corner crosshairs
+       - Fixed unboxing video disclaimer pinned to bottom container
+    ============================================================ */
+    function printAddresses() {
+      var boxes = document.querySelectorAll('.addr-box');
+      if (!boxes.length) {
+        alert('Please click "Add Box" to add an address first.');
+        return;
+      }
+
+      var fontFamily = document.getElementById('fontFamily').value;
+      var pageSize = document.getElementById('pageSize').value;
+
+      var pagesHtml = '';
+      var hasValidCard = false;
+
+      // Loop through all boxes
+      for (var b = 0; b < boxes.length; b++) {
+        var box = boxes[b];
+        var editable = box.querySelector('.editable');
+        var kdoBtn = box.querySelector('.kdo-btn');
+        var codeElem = box.querySelector('.box-unique-code');
+        
+        var label = kdoBtn ? kdoBtn.textContent.trim() : 'KDO';
+        var content = editable.innerHTML.trim();
+        var plainText = editable.innerText.trim();
+        var size = window.getComputedStyle(editable).fontSize;
+        var align = window.getComputedStyle(editable).textAlign;
+
+        if (!plainText) {
+          content = '<span style="color:#aaa;">[Empty Address Card]</span>';
+        }
+        hasValidCard = true;
+
+        // Use the Unique ID currently displayed on this box
+        var currentId = codeElem ? codeElem.textContent.trim() : generateUniqueId();
+        if (!currentId) currentId = generateUniqueId();
+
+        // Generate QR code containing customer address data + unique tracking ID
+        var qrText = buildQRPayload(plainText, currentId);
+        var qrDataUrl = generateQRDataUrl(qrText);
+
+        // Calculate printable page height for pageSize
+        var pageH = '277mm';
+        var qrImgSize = 112;
+        if (pageSize.toLowerCase() === 'a5') { pageH = '190mm'; qrImgSize = 104; }
+        if (pageSize.toLowerCase() === 'a6') { pageH = '128mm'; qrImgSize = 92; }
+
+        // Build Tech Cyber Printable Page
+        pagesHtml +=
+          '<div class="page">' +
+            '<!-- TECH HEADER BAR -->' +
+            '<div class="tech-header">' +
+              '<div class="brand-group">' +
+                '<span class="brand-title">&#9889; PRIORITY DISPATCH // EXPRESS LOGISTICS</span>' +
+                '<span class="brand-sub">AUTHENTICATED PARCEL DELIVERY SPECIFICATION</span>' +
+              '</div>' +
+              '<div class="kdo-capsule">' + label + '</div>' +
+            '</div>' +
+
+            '<!-- MAIN BODY SPLIT -->' +
+            '<div class="body-row">' +
+              '<!-- RECIPIENT COMPARTMENT -->' +
+              '<div class="dest-col">' +
+                '<div class="dest-title">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
+                '<div class="content" style="font-size:' + size + ';text-align:' + align + '">' + content + '</div>' +
+              '</div>' +
+
+              '<!-- QR & TRACKING MATRIX -->' +
+              '<div class="qr-col">' +
+                '<div class="qr-crosshair-wrap">' +
+                  '<div class="ch-tl"></div><div class="ch-tr"></div>' +
+                  '<div class="ch-bl"></div><div class="ch-br"></div>' +
+                  (qrDataUrl ? '<img class="qr-code-img" src="' + qrDataUrl + '" width="' + qrImgSize + '" height="' + qrImgSize + '" alt="QR"/>' : '') +
+                '</div>' +
+                '<div class="tracking-pill">' + currentId + '</div>' +
+                '<div class="scan-tag">SCAN TO VERIFY</div>' +
+              '</div>' +
+            '</div>' +
+
+            '<!-- TECH PINNED FOOTER -->' +
+            '<div class="note">' +
+              '<span class="note-alert">&#9888;&#65039; MANDATORY UNBOXING VIDEO REQUIRED FOR DAMAGE / MISSING CLAIMS</span>' +
+              '<span class="note-foot">TAMPER-EVIDENT DISPATCH &#183; SECURE TRANSIT PROTOCOL</span>' +
+            '</div>' +
+          '</div>';
+
+        // AFTER assigning this ID to print, assign a FRESH new ID on screen for the next click!
+        if (codeElem) {
+          codeElem.textContent = generateUniqueId();
+        }
+      }
+
+      if (!hasValidCard) return;
+
+      // Complete print HTML document with High-Tech Monochrome Print Styling
+      var fullHtml =
+        '<!DOCTYPE html><html><head><title>Tech Print ' + pageSize + '</title>' +
+        '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
+        '<style>' +
+          '@page { size: ' + pageSize + ' portrait; margin: 8mm; }' +
+          'html, body { height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
+          '.page { width: 100%; height: ' + pageH + '; min-height: ' + pageH + '; box-sizing: border-box; padding: 12px; position: relative; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; justify-content: space-between; border: 2.5px solid #000; background: #fff; }' +
+          '.page:last-child { page-break-after: avoid; }' +
+          
+          '/* TECH HEADER */' +
+          '.tech-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 7px; margin-bottom: 10px; flex-shrink: 0; }' +
+          '.brand-group { display: flex; flex-direction: column; gap: 2px; }' +
+          '.brand-title { font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 800; letter-spacing: 0.5px; }' +
+          '.brand-sub { font-family: "JetBrains Mono", monospace; font-size: 8px; color: #444; letter-spacing: 0.4px; }' +
+          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: 15px; font-weight: 800; background: #000; color: #fff; padding: 3px 12px; border-radius: 4px; letter-spacing: 1px; }' +
+
+          '/* BODY & RECIPIENT */' +
+          '.body-row { display: flex; justify-content: space-between; align-items: stretch; flex: 1 1 auto; gap: 14px; overflow: hidden; padding: 4px 0; }' +
+          '.dest-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }' +
+          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }' +
+          '.content { flex: 1; word-wrap: break-word; line-height: 1.48; overflow: hidden; }' +
+
+          '/* QR & CROSSHAIR BOX */' +
+          '.qr-col { width: 120px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1.5px dashed #555; padding-left: 12px; }' +
+          '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; }' +
+          '.qr-code-img { display: block; background: #fff; }' +
+          '.ch-tl { position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-left: 2px solid #000; }' +
+          '.ch-tr { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-right: 2px solid #000; }' +
+          '.ch-bl { position: absolute; bottom: 0; left: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-left: 2px solid #000; }' +
+          '.ch-br { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-right: 2px solid #000; }' +
+          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 800; border: 1.5px solid #000; padding: 2px 5px; margin-top: 6px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
+          '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: 7.5px; font-weight: 700; color: #444; margin-top: 3px; letter-spacing: 0.5px; text-align: center; }' +
+
+          '/* FOOTER SECURITY NOTE */' +
+          '.note { margin-top: auto; padding-top: 6px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; display: flex; flex-direction: column; gap: 2px; }' +
+          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: 9.5px; font-weight: 800; color: #000; letter-spacing: 0.4px; }' +
+          '.note-foot { font-family: "JetBrains Mono", monospace; font-size: 7.5px; font-weight: 600; color: #555; letter-spacing: 0.5px; }' +
+        '</style>' +
+        '</head><body>' +
+        pagesHtml +
+        '</body></html>';
+
+      // Hidden iframe for 100% reliable printing without popup blocking
+      var frame = document.getElementById('print_frame');
+      if (!frame) {
+        frame = document.createElement('iframe');
+        frame.id = 'print_frame';
+        frame.style.position = 'fixed';
+        frame.style.right = '0';
+        frame.style.bottom = '0';
+        frame.style.width = '0';
+        frame.style.height = '0';
+        frame.style.border = '0';
+        document.body.appendChild(frame);
+      }
+
+      var frameDoc = frame.contentWindow.document;
+      frameDoc.open();
+      frameDoc.write(fullHtml);
+      frameDoc.close();
+
+      setTimeout(function() {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+      }, 350);
+    }
+
+    /* ============================================================
+       5. PDF DOWNLOAD
+    ============================================================ */
+    function generatePDF() {
+      var boxes = document.querySelectorAll('.addr-box');
+      if (!boxes.length) {
+        alert('Please add an address first.');
+        return;
+      }
+
+      var jsPDFLib = window.jspdf;
+      var pageSize = document.getElementById('pageSize').value.toLowerCase();
+      var doc = new jsPDFLib.jsPDF({ format: pageSize });
+
+      var colWidth = 180, maxH = 270, qrSz = 35, qrX = 160;
+      if (pageSize === 'a5') { colWidth = 100; maxH = 190; qrSz = 30; qrX = 110; }
+      if (pageSize === 'a6') { colWidth = 65; maxH = 130; qrSz = 25; qrX = 75; }
+
+      var y = 10;
+      var hasPage = false;
+
+      for (var b = 0; b < boxes.length; b++) {
+        var box = boxes[b];
+        var editable = box.querySelector('.editable');
+        var codeElem = box.querySelector('.box-unique-code');
+        var text = editable ? editable.innerText.trim() : '';
+        if (!text) text = '[Empty Address Card]';
+
+        var currentId = codeElem ? codeElem.textContent.trim() : generateUniqueId();
+        if (!currentId) currentId = generateUniqueId();
+
+        var qrText = buildQRPayload(text, currentId);
+        var qrUrl = generateQRDataUrl(qrText);
+
+        var lines = doc.splitTextToSize(text, colWidth);
+        var blockH = Math.max(lines.length * 6, qrSz) + 20;
+
+        if (y + blockH > maxH && hasPage) {
+          doc.addPage();
+          y = 10;
+        }
+
+        doc.setFontSize(11);
+        doc.text(lines, 10, y + 5);
+
+        if (qrUrl) {
+          doc.addImage(qrUrl, 'PNG', qrX, y, qrSz, qrSz);
+          doc.setFontSize(8);
+          doc.text(currentId, qrX, y + qrSz + 4);
+        }
+
+        y += blockH;
+        hasPage = true;
+
+        if (codeElem) {
+          codeElem.textContent = generateUniqueId();
+        }
+      }
+
+      doc.save('tech_shipping_labels.pdf');
+    }
+
+    // Start with one box
+    addBox();
+  </script>
+</body>
+
+</html>
