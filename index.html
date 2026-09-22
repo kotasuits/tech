@@ -919,7 +919,7 @@
                   '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
 
-                '<!-- QR & TRACKING MATRIX (ARCHITECTURAL TOP-TO-BOTTOM DIVIDER) -->' +
+                '<!-- QR & TRACKING MATRIX (ARCHITECTURAL TOP-TO-BOTTOM DASHED DIVIDER) -->' +
                 '<div class="qr-col">' +
                   '<div class="qr-crosshair-wrap">' +
                     '<div class="ch-tl"></div><div class="ch-tr"></div>' +
@@ -985,8 +985,8 @@
           '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
           '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
 
-          '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM ARCHITECTURAL DIVIDER) */' +
-          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px solid #09090b; padding: 12px 10px 8px 10px; background: #fafafa; }' +
+          '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM ARCHITECTURAL DASHED DIVIDER) */' +
+          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px dashed #09090b; padding: 12px 10px 8px 10px; background: #fafafa; }' +
           '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; background: #fff; border-radius: 8px; border: 1px solid #e4e4e7; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }' +
           '.qr-code-img { display: block; }' +
           '.ch-tl { position: absolute; top: 0; left: 0; width: 7px; height: 7px; border-top: 2px solid #09090b; border-left: 2px solid #09090b; border-top-left-radius: 3px; }' +
@@ -1091,11 +1091,13 @@
         doc.setLineWidth(0.6);
         doc.roundedRect(margin, boxTop, boxW, boxH, 2.5, 2.5, 'S');
 
-        // 3. Top-to-bottom vertical divider between address and QR
+        // 3. Top-to-bottom vertical divider between address and QR (dashed)
         var dividerX = margin + boxW - qrColW;
         var noteY = boxBottom - 6.8;
         doc.setLineWidth(0.5);
+        doc.setLineDash([2, 1.5], 0);
         doc.line(dividerX, boxTop, dividerX, noteY);
+        doc.setLineDash([]); // Reset to solid for remaining lines
 
         // 4. Header: SHIP TO badge + VERIFIED RECIPIENT
         doc.setFillColor(9, 9, 11);
