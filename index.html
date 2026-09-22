@@ -640,15 +640,17 @@
       });
     }
 
-    function getMagicPrintFontSize(text, pageSize) {
+    function getMagicPrintTypography(text, pageSize) {
       var clean = (text || '').replace(/\r/g, '').trim();
-      if (!clean || clean === '[Empty Address Card]') return '15px';
+      if (!clean || clean === '[Empty Address Card]') {
+        return { fontSize: '18px', lineHeight: '1.55' };
+      }
       var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
       var lineCount = Math.max(lines.length, 1);
       var charCount = clean.length;
       var p = (pageSize || 'a6').toLowerCase();
 
-      var wrapWidthChars = (p === 'a4') ? 55 : (p === 'a5' ? 40 : 26);
+      var wrapWidthChars = (p === 'a4') ? 52 : (p === 'a5' ? 38 : 25);
       var estLines = 0;
       for (var i = 0; i < lines.length; i++) {
         estLines += Math.max(1, Math.ceil(lines[i].length / wrapWidthChars));
@@ -656,35 +658,45 @@
       var effLines = Math.max(lineCount, estLines);
 
       if (p === 'a6') {
-        if (effLines >= 10 || charCount > 240) return '11px';
-        if (effLines >= 8  || charCount > 180) return '12.5px';
-        if (effLines >= 6  || charCount > 130) return '14px';
-        if (effLines <= 3  && charCount < 65)  return '17.5px';
-        return '15.5px';
+        // Full A6 printable area (~142mm x 100mm)
+        if (effLines >= 11 || charCount > 280) return { fontSize: '11px',   lineHeight: '1.30' };
+        if (effLines >= 9  || charCount > 210) return { fontSize: '12.5px', lineHeight: '1.36' };
+        if (effLines >= 7  || charCount > 150) return { fontSize: '14.5px', lineHeight: '1.42' };
+        if (effLines >= 5  || charCount > 95)  return { fontSize: '17.5px', lineHeight: '1.50' };
+        if (effLines <= 3  && charCount < 70)  return { fontSize: '23px',   lineHeight: '1.65' };
+        return { fontSize: '19.5px', lineHeight: '1.55' };
       } else if (p === 'a5') {
-        if (effLines >= 11 || charCount > 300) return '13.5px';
-        if (effLines >= 8  || charCount > 210) return '16px';
-        if (effLines >= 6  || charCount > 140) return '18.5px';
-        if (effLines <= 3  && charCount < 80)  return '22px';
-        return '19.5px';
+        // Full A5 printable area (~202mm x 141mm)
+        if (effLines >= 12 || charCount > 350) return { fontSize: '14px',   lineHeight: '1.30' };
+        if (effLines >= 9  || charCount > 240) return { fontSize: '17px',   lineHeight: '1.38' };
+        if (effLines >= 7  || charCount > 160) return { fontSize: '21px',   lineHeight: '1.45' };
+        if (effLines >= 5  || charCount > 105) return { fontSize: '25px',   lineHeight: '1.52' };
+        if (effLines <= 3  && charCount < 80)  return { fontSize: '31px',   lineHeight: '1.68' };
+        return { fontSize: '27px', lineHeight: '1.58' };
       } else { // A4
-        if (effLines >= 13 || charCount > 400) return '16px';
-        if (effLines >= 9  || charCount > 270) return '19px';
-        if (effLines >= 6  || charCount > 160) return '22px';
-        if (effLines <= 3  && charCount < 90)  return '26px';
-        return '23px';
+        // Full A4 printable area (~287mm x 200mm)
+        if (effLines >= 13 || charCount > 430) return { fontSize: '17px',   lineHeight: '1.30' };
+        if (effLines >= 10 || charCount > 290) return { fontSize: '22px',   lineHeight: '1.38' };
+        if (effLines >= 7  || charCount > 180) return { fontSize: '27px',   lineHeight: '1.45' };
+        if (effLines >= 5  || charCount > 120) return { fontSize: '33px',   lineHeight: '1.55' };
+        if (effLines <= 3  && charCount < 95)  return { fontSize: '42px',   lineHeight: '1.70' };
+        return { fontSize: '35px', lineHeight: '1.60' };
       }
+    }
+
+    function getMagicPrintFontSize(text, pageSize) {
+      return getMagicPrintTypography(text, pageSize).fontSize;
     }
 
     function getMagicPdfFontSize(text, pageSize) {
       var clean = (text || '').replace(/\r/g, '').trim();
-      if (!clean || clean === '[Empty Address Card]') return 11;
+      if (!clean || clean === '[Empty Address Card]') return 12;
       var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
       var lineCount = Math.max(lines.length, 1);
       var charCount = clean.length;
       var p = (pageSize || 'a6').toLowerCase();
 
-      var wrapWidthChars = (p === 'a4') ? 55 : (p === 'a5' ? 40 : 26);
+      var wrapWidthChars = (p === 'a4') ? 52 : (p === 'a5' ? 38 : 25);
       var estLines = 0;
       for (var i = 0; i < lines.length; i++) {
         estLines += Math.max(1, Math.ceil(lines[i].length / wrapWidthChars));
@@ -692,23 +704,26 @@
       var effLines = Math.max(lineCount, estLines);
 
       if (p === 'a6') {
-        if (effLines >= 10 || charCount > 230) return 8.5;
-        if (effLines >= 7  || charCount > 170) return 9.5;
-        if (effLines >= 5  || charCount > 120) return 11;
-        if (effLines <= 3  && charCount < 70)  return 13.5;
-        return 11.5;
+        if (effLines >= 11 || charCount > 280) return 9;
+        if (effLines >= 9  || charCount > 210) return 10.5;
+        if (effLines >= 7  || charCount > 150) return 12;
+        if (effLines >= 5  || charCount > 95)  return 14.5;
+        if (effLines <= 3  && charCount < 70)  return 18;
+        return 15.5;
       } else if (p === 'a5') {
-        if (effLines >= 11 || charCount > 280) return 10;
-        if (effLines >= 8  || charCount > 190) return 12;
-        if (effLines >= 5  || charCount > 130) return 14.5;
-        if (effLines <= 3  && charCount < 80)  return 17;
-        return 14;
+        if (effLines >= 12 || charCount > 350) return 11.5;
+        if (effLines >= 9  || charCount > 240) return 14;
+        if (effLines >= 7  || charCount > 160) return 17;
+        if (effLines >= 5  || charCount > 105) return 20.5;
+        if (effLines <= 3  && charCount < 80)  return 25;
+        return 22;
       } else { // A4
-        if (effLines >= 13 || charCount > 350) return 12;
-        if (effLines >= 9  || charCount > 220) return 15;
-        if (effLines >= 5  || charCount > 140) return 18;
-        if (effLines <= 3  && charCount < 90)  return 22;
-        return 17;
+        if (effLines >= 13 || charCount > 430) return 14;
+        if (effLines >= 10 || charCount > 290) return 18;
+        if (effLines >= 7  || charCount > 180) return 22;
+        if (effLines >= 5  || charCount > 120) return 27;
+        if (effLines <= 3  && charCount < 95)  return 34;
+        return 28;
       }
     }
 
@@ -826,6 +841,43 @@
 
       var fontFamily = document.getElementById('fontFamily').value;
       var pageSize = document.getElementById('pageSize').value;
+      var pSize = (pageSize || 'a6').toLowerCase();
+
+      // DYNAMIC FULL PRINTABLE AREA CONFIGURATION
+      var pageMargin = '2.5mm';
+      var pageH = '141.5mm';
+      var pagePadding = '7px 9px';
+      var qrColWidth = '112px';
+      var qrImgSize = 96;
+      var kdoFontSize = '15px';
+      var destTitleFontSize = '10px';
+      var noteFontSize = '11.5px';
+      var trackingFontSize = '10px';
+      var scanTagFontSize = '7.5px';
+
+      if (pSize === 'a5') {
+        pageMargin = '3.5mm';
+        pageH = '201.5mm';
+        pagePadding = '10px 12px';
+        qrColWidth = '140px';
+        qrImgSize = 120;
+        kdoFontSize = '18px';
+        destTitleFontSize = '12px';
+        noteFontSize = '13.5px';
+        trackingFontSize = '12px';
+        scanTagFontSize = '9px';
+      } else if (pSize === 'a4') {
+        pageMargin = '4.5mm';
+        pageH = '286mm';
+        pagePadding = '14px 16px';
+        qrColWidth = '175px';
+        qrImgSize = 150;
+        kdoFontSize = '22px';
+        destTitleFontSize = '14px';
+        noteFontSize = '16px';
+        trackingFontSize = '14px';
+        scanTagFontSize = '11px';
+      }
 
       var pagesHtml = '';
       var hasValidCard = false;
@@ -840,7 +892,6 @@
         var label = kdoBtn ? kdoBtn.textContent.trim() : 'KDO';
         var content = editable.innerHTML.trim();
         var plainText = editable.innerText.trim();
-        var size = window.getComputedStyle(editable).fontSize;
         var align = window.getComputedStyle(editable).textAlign;
 
         if (!plainText) {
@@ -856,46 +907,40 @@
         var qrText = buildQRPayload(plainText, currentId);
         var qrDataUrl = generateQRDataUrl(qrText);
 
-        // Calculate printable page height for pageSize
-        var pageH = '277mm';
-        var qrImgSize = 112;
-        if (pageSize.toLowerCase() === 'a5') { pageH = '190mm'; qrImgSize = 104; }
-        if (pageSize.toLowerCase() === 'a6') { pageH = '128mm'; qrImgSize = 92; }
-
-        // Magic Auto-Fit font size calculation for print
-        var magicPrintSize = getMagicPrintFontSize(plainText, pageSize);
+        // Magic Auto-Fit typography calculation for print
+        var typo = getMagicPrintTypography(plainText, pageSize);
 
         // Build Printable Page with Clean Structured Address Format
         pagesHtml +=
           '<div class="page">' +
             '<!-- TOP BAR WITH KDO BADGE -->' +
             '<div class="tech-header">' +
-              '<div class="kdo-capsule">' + label + '</div>' +
+              '<div class="kdo-capsule" style="font-size:' + kdoFontSize + ';">' + label + '</div>' +
             '</div>' +
             
             '<!-- MAIN BODY SPLIT -->' +
             '<div class="body-row">' +
-              '<!-- RECIPIENT COMPARTMENT -->' +
+              '<!-- RECIPIENT COMPARTMENT (DYNAMIC FULL AREA AUTO-FIT) -->' +
               '<div class="dest-col">' +
-                '<div class="dest-title">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
-                '<div class="content" style="font-size:' + magicPrintSize + ';text-align:' + align + '">' + content + '</div>' +
+                '<div class="dest-title" style="font-size:' + destTitleFontSize + ';">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
+                '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
               '</div>' +
               
               '<!-- QR & TRACKING MATRIX -->' +
-              '<div class="qr-col">' +
+              '<div class="qr-col" style="width:' + qrColWidth + ';">' +
                 '<div class="qr-crosshair-wrap">' +
                   '<div class="ch-tl"></div><div class="ch-tr"></div>' +
                   '<div class="ch-bl"></div><div class="ch-br"></div>' +
                   (qrDataUrl ? '<img class="qr-code-img" src="' + qrDataUrl + '" width="' + qrImgSize + '" height="' + qrImgSize + '" alt="QR"/>' : '') +
                 '</div>' +
-                '<div class="tracking-pill">' + currentId + '</div>' +
-                '<div class="scan-tag">SCAN TO VERIFY</div>' +
+                '<div class="tracking-pill" style="font-size:' + trackingFontSize + ';">' + currentId + '</div>' +
+                '<div class="scan-tag" style="font-size:' + scanTagFontSize + ';">SCAN TO VERIFY</div>' +
               '</div>' +
             '</div>' +
             
             '<!-- PINNED FOOTER DISCLAIMER -->' +
             '<div class="note">' +
-              '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
+              '<span class="note-alert" style="font-size:' + noteFontSize + ';">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
             '</div>' +
           '</div>';
 
@@ -912,36 +957,37 @@
         '<!DOCTYPE html><html><head><title>Print ' + pageSize + '</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
         '<style>' +
-          '@page { size: ' + pageSize + ' portrait; margin: 8mm; }' +
-          'html, body { height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
-          '.page { width: 100%; height: ' + pageH + '; min-height: ' + pageH + '; box-sizing: border-box; padding: 12px; position: relative; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; justify-content: space-between; border: 2.5px solid #000; background: #fff; }' +
+          '@page { size: ' + pageSize + ' portrait; margin: ' + pageMargin + '; }' +
+          '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }' +
+          'html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
+          '.page { width: 100%; height: ' + pageH + '; min-height: ' + pageH + '; max-height: ' + pageH + '; box-sizing: border-box; padding: ' + pagePadding + '; position: relative; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; justify-content: space-between; border: 2.5px solid #000; background: #fff; overflow: hidden; }' +
           '.page:last-child { page-break-after: avoid; }' +
           
           '/* TOP BAR */' +
-          '.tech-header { display: flex; justify-content: flex-end; align-items: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px; flex-shrink: 0; }' +
-          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: 15px; font-weight: 800; background: #000; color: #fff; padding: 3px 12px; border-radius: 4px; letter-spacing: 1px; }' +
+          '.tech-header { display: flex; justify-content: flex-end; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 6px; flex-shrink: 0; }' +
+          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-weight: 800; background: #000; color: #fff; padding: 3px 12px; border-radius: 4px; letter-spacing: 1px; }' +
 
           '/* BODY & RECIPIENT */' +
-          '.body-row { display: flex; justify-content: space-between; align-items: stretch; flex: 1 1 auto; gap: 14px; overflow: hidden; padding: 4px 0; }' +
-          '.dest-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }' +
-          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }' +
-          '.content { flex: 1; word-wrap: break-word; line-height: 1.48; overflow: hidden; }' +
-          '.content * { font-size: inherit !important; }' +
+          '.body-row { display: flex; justify-content: space-between; align-items: stretch; flex: 1 1 auto; gap: 12px; overflow: hidden; padding: 2px 0; }' +
+          '.dest-col { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: flex-start; }' +
+          '.dest-title { font-family: "JetBrains Mono", monospace; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }' +
+          '.content { flex: 1; word-wrap: break-word; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-start; }' +
+          '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
 
           '/* QR & CROSSHAIR BOX */' +
-          '.qr-col { width: 120px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1.5px dashed #555; padding-left: 12px; }' +
+          '.qr-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1.5px dashed #555; padding-left: 10px; }' +
           '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; }' +
           '.qr-code-img { display: block; background: #fff; }' +
           '.ch-tl { position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-left: 2px solid #000; }' +
           '.ch-tr { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-right: 2px solid #000; }' +
           '.ch-bl { position: absolute; bottom: 0; left: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-left: 2px solid #000; }' +
           '.ch-br { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-right: 2px solid #000; }' +
-          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 800; border: 1.5px solid #000; padding: 2px 5px; margin-top: 6px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
-          '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: 7.5px; font-weight: 700; color: #444; margin-top: 3px; letter-spacing: 0.5px; text-align: center; }' +
+          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 6px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
+          '.scan-tag { font-family: "JetBrains Mono", monospace; font-weight: 700; color: #444; margin-top: 3px; letter-spacing: 0.5px; text-align: center; }' +
 
           '/* FOOTER SECURITY NOTE */' +
-          '.note { margin-top: auto; padding-top: 8px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; }' +
-          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
+          '.note { margin-top: auto; padding-top: 6px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; }' +
+          '.note-alert { font-family: "JetBrains Mono", monospace; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
         '</style>' +
         '</head><body>' +
         pagesHtml +
@@ -986,9 +1032,9 @@
       var pageSize = document.getElementById('pageSize').value.toLowerCase();
       var doc = new jsPDFLib.jsPDF({ format: pageSize });
 
-      var colWidth = 180, maxH = 270, qrSz = 35, qrX = 160;
-      if (pageSize === 'a5') { colWidth = 100; maxH = 190; qrSz = 30; qrX = 110; }
-      if (pageSize === 'a6') { colWidth = 65; maxH = 130; qrSz = 25; qrX = 75; }
+      var colWidth = 180, maxH = 280, qrSz = 36, qrX = 162;
+      if (pageSize === 'a5') { colWidth = 105; maxH = 198; qrSz = 30; qrX = 112; }
+      if (pageSize === 'a6') { colWidth = 68; maxH = 138; qrSz = 26; qrX = 75; }
 
       var y = 10;
       var hasPage = false;
@@ -1010,8 +1056,8 @@
         doc.setFontSize(magicPdfSize);
 
         var lines = doc.splitTextToSize(text, colWidth);
-        var lineH = magicPdfSize * 0.48;
-        var blockH = Math.max(lines.length * lineH, qrSz) + 20;
+        var lineH = magicPdfSize * 0.52;
+        var blockH = Math.max(lines.length * lineH, qrSz) + 16;
 
         if (y + blockH > maxH && hasPage) {
           doc.addPage();
