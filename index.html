@@ -643,14 +643,14 @@
     function getMagicPrintTypography(text, pageSize) {
       var clean = (text || '').replace(/\r/g, '').trim();
       if (!clean || clean === '[Empty Address Card]') {
-        return { fontSize: '18px', lineHeight: '1.55' };
+        return { fontSize: '15px', lineHeight: '1.34' };
       }
       var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
       var lineCount = Math.max(lines.length, 1);
       var charCount = clean.length;
       var p = (pageSize || 'a6').toLowerCase();
 
-      var wrapWidthChars = (p === 'a4') ? 52 : (p === 'a5' ? 38 : 25);
+      var wrapWidthChars = (p === 'a4') ? 50 : (p === 'a5' ? 36 : 24);
       var estLines = 0;
       for (var i = 0; i < lines.length; i++) {
         estLines += Math.max(1, Math.ceil(lines[i].length / wrapWidthChars));
@@ -658,29 +658,26 @@
       var effLines = Math.max(lineCount, estLines);
 
       if (p === 'a6') {
-        // Full A6 printable area (~142mm x 100mm)
-        if (effLines >= 11 || charCount > 280) return { fontSize: '11px',   lineHeight: '1.30' };
-        if (effLines >= 9  || charCount > 210) return { fontSize: '12.5px', lineHeight: '1.36' };
-        if (effLines >= 7  || charCount > 150) return { fontSize: '14.5px', lineHeight: '1.42' };
-        if (effLines >= 5  || charCount > 95)  return { fontSize: '17.5px', lineHeight: '1.50' };
-        if (effLines <= 3  && charCount < 70)  return { fontSize: '23px',   lineHeight: '1.65' };
-        return { fontSize: '19.5px', lineHeight: '1.55' };
+        if (effLines >= 11 || charCount > 280) return { fontSize: '11px',   lineHeight: '1.24' };
+        if (effLines >= 9  || charCount > 210) return { fontSize: '12.5px', lineHeight: '1.27' };
+        if (effLines >= 7  || charCount > 150) return { fontSize: '14px',   lineHeight: '1.30' };
+        if (effLines >= 5  || charCount > 95)  return { fontSize: '15.5px', lineHeight: '1.33' };
+        if (effLines <= 3  && charCount < 70)  return { fontSize: '17px',   lineHeight: '1.36' };
+        return { fontSize: '16px', lineHeight: '1.34' };
       } else if (p === 'a5') {
-        // Full A5 printable area (~202mm x 141mm)
-        if (effLines >= 12 || charCount > 350) return { fontSize: '14px',   lineHeight: '1.30' };
-        if (effLines >= 9  || charCount > 240) return { fontSize: '17px',   lineHeight: '1.38' };
-        if (effLines >= 7  || charCount > 160) return { fontSize: '21px',   lineHeight: '1.45' };
-        if (effLines >= 5  || charCount > 105) return { fontSize: '25px',   lineHeight: '1.52' };
-        if (effLines <= 3  && charCount < 80)  return { fontSize: '31px',   lineHeight: '1.68' };
-        return { fontSize: '27px', lineHeight: '1.58' };
+        if (effLines >= 12 || charCount > 350) return { fontSize: '13px',   lineHeight: '1.25' };
+        if (effLines >= 9  || charCount > 240) return { fontSize: '15px',   lineHeight: '1.28' };
+        if (effLines >= 7  || charCount > 160) return { fontSize: '17.5px', lineHeight: '1.32' };
+        if (effLines >= 5  || charCount > 105) return { fontSize: '20px',   lineHeight: '1.35' };
+        if (effLines <= 3  && charCount < 80)  return { fontSize: '23px',   lineHeight: '1.36' };
+        return { fontSize: '20px', lineHeight: '1.35' };
       } else { // A4
-        // Full A4 printable area (~287mm x 200mm)
-        if (effLines >= 13 || charCount > 430) return { fontSize: '17px',   lineHeight: '1.30' };
-        if (effLines >= 10 || charCount > 290) return { fontSize: '22px',   lineHeight: '1.38' };
-        if (effLines >= 7  || charCount > 180) return { fontSize: '27px',   lineHeight: '1.45' };
-        if (effLines >= 5  || charCount > 120) return { fontSize: '33px',   lineHeight: '1.55' };
-        if (effLines <= 3  && charCount < 95)  return { fontSize: '42px',   lineHeight: '1.70' };
-        return { fontSize: '35px', lineHeight: '1.60' };
+        if (effLines >= 13 || charCount > 430) return { fontSize: '15px', lineHeight: '1.25' };
+        if (effLines >= 10 || charCount > 290) return { fontSize: '18px', lineHeight: '1.28' };
+        if (effLines >= 7  || charCount > 180) return { fontSize: '22px', lineHeight: '1.32' };
+        if (effLines >= 5  || charCount > 120) return { fontSize: '26px', lineHeight: '1.35' };
+        if (effLines <= 3  && charCount < 95)  return { fontSize: '30px', lineHeight: '1.36' };
+        return { fontSize: '26px', lineHeight: '1.35' };
       }
     }
 
@@ -843,40 +840,36 @@
       var pageSize = document.getElementById('pageSize').value;
       var pSize = (pageSize || 'a6').toLowerCase();
 
-      // DYNAMIC FULL PRINTABLE AREA CONFIGURATION
-      var pageMargin = '2.5mm';
-      var pageH = '141.5mm';
-      var pagePadding = '7px 9px';
-      var qrColWidth = '112px';
+      var pageMargin = '3mm';
+      var boxPadding = '8px 10px';
+      var qrColWidth = '115px';
       var qrImgSize = 96;
-      var kdoFontSize = '15px';
-      var destTitleFontSize = '10px';
-      var noteFontSize = '11.5px';
+      var kdoFontSize = '14px';
+      var destTitleFontSize = '9.5px';
       var trackingFontSize = '10px';
       var scanTagFontSize = '7.5px';
+      var noteFontSize = '10.5px';
 
       if (pSize === 'a5') {
-        pageMargin = '3.5mm';
-        pageH = '201.5mm';
-        pagePadding = '10px 12px';
+        pageMargin = '4mm';
+        boxPadding = '12px 14px';
         qrColWidth = '140px';
         qrImgSize = 120;
-        kdoFontSize = '18px';
-        destTitleFontSize = '12px';
-        noteFontSize = '13.5px';
+        kdoFontSize = '17px';
+        destTitleFontSize = '11.5px';
         trackingFontSize = '12px';
         scanTagFontSize = '9px';
+        noteFontSize = '12.5px';
       } else if (pSize === 'a4') {
-        pageMargin = '4.5mm';
-        pageH = '286mm';
-        pagePadding = '14px 16px';
-        qrColWidth = '175px';
-        qrImgSize = 150;
-        kdoFontSize = '22px';
-        destTitleFontSize = '14px';
-        noteFontSize = '16px';
+        pageMargin = '5mm';
+        boxPadding = '16px 18px';
+        qrColWidth = '170px';
+        qrImgSize = 145;
+        kdoFontSize = '20px';
+        destTitleFontSize = '13.5px';
         trackingFontSize = '14px';
-        scanTagFontSize = '11px';
+        scanTagFontSize = '10.5px';
+        noteFontSize = '14.5px';
       }
 
       var pagesHtml = '';
@@ -907,40 +900,41 @@
         var qrText = buildQRPayload(plainText, currentId);
         var qrDataUrl = generateQRDataUrl(qrText);
 
-        // Magic Auto-Fit typography calculation for print
+        // Magic Auto-Fit typography calculation for print (tight, no extra spaces)
         var typo = getMagicPrintTypography(plainText, pageSize);
 
-        // Build Printable Page with Clean Structured Address Format
+        // Build Printable Page with KDO Outside on Top Middle + Clean Label Box
         pagesHtml +=
           '<div class="page">' +
-            '<!-- TOP BAR WITH KDO BADGE -->' +
-            '<div class="tech-header">' +
-              '<div class="kdo-capsule" style="font-size:' + kdoFontSize + ';">' + label + '</div>' +
+            '<!-- KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE -->' +
+            '<div class="kdo-outside-wrap">' +
+              '<div class="kdo-capsule">' + label + '</div>' +
             '</div>' +
-            
-            '<!-- MAIN BODY SPLIT -->' +
-            '<div class="body-row">' +
-              '<!-- RECIPIENT COMPARTMENT (DYNAMIC FULL AREA AUTO-FIT) -->' +
-              '<div class="dest-col">' +
-                '<div class="dest-title" style="font-size:' + destTitleFontSize + ';">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
-                '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
-              '</div>' +
-              
-              '<!-- QR & TRACKING MATRIX -->' +
-              '<div class="qr-col" style="width:' + qrColWidth + ';">' +
-                '<div class="qr-crosshair-wrap">' +
-                  '<div class="ch-tl"></div><div class="ch-tr"></div>' +
-                  '<div class="ch-bl"></div><div class="ch-br"></div>' +
-                  (qrDataUrl ? '<img class="qr-code-img" src="' + qrDataUrl + '" width="' + qrImgSize + '" height="' + qrImgSize + '" alt="QR"/>' : '') +
+            '<!-- MAIN LABEL BOX -->' +
+            '<div class="label-box">' +
+              '<div class="body-row">' +
+                '<!-- RECIPIENT COMPARTMENT (DYNAMIC AUTO-FIT) -->' +
+                '<div class="dest-col">' +
+                  '<div class="dest-title">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
+                  '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
-                '<div class="tracking-pill" style="font-size:' + trackingFontSize + ';">' + currentId + '</div>' +
-                '<div class="scan-tag" style="font-size:' + scanTagFontSize + ';">SCAN TO VERIFY</div>' +
+
+                '<!-- QR & TRACKING MATRIX (ORIGINAL LOCATION: TOP RIGHT) -->' +
+                '<div class="qr-col">' +
+                  '<div class="qr-crosshair-wrap">' +
+                    '<div class="ch-tl"></div><div class="ch-tr"></div>' +
+                    '<div class="ch-bl"></div><div class="ch-br"></div>' +
+                    (qrDataUrl ? '<img class="qr-code-img" src="' + qrDataUrl + '" width="' + qrImgSize + '" height="' + qrImgSize + '" alt="QR"/>' : '') +
+                  '</div>' +
+                  '<div class="tracking-pill">' + currentId + '</div>' +
+                  '<div class="scan-tag">SCAN TO VERIFY</div>' +
+                '</div>' +
               '</div>' +
-            '</div>' +
-            
-            '<!-- PINNED FOOTER DISCLAIMER -->' +
-            '<div class="note">' +
-              '<span class="note-alert" style="font-size:' + noteFontSize + ';">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
+
+              '<!-- PINNED FOOTER DISCLAIMER -->' +
+              '<div class="note">' +
+                '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
+              '</div>' +
             '</div>' +
           '</div>';
 
@@ -959,35 +953,39 @@
         '<style>' +
           '@page { size: ' + pageSize + ' portrait; margin: ' + pageMargin + '; }' +
           '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }' +
-          'html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
-          '.page { width: 100%; height: ' + pageH + '; min-height: ' + pageH + '; max-height: ' + pageH + '; box-sizing: border-box; padding: ' + pagePadding + '; position: relative; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; justify-content: space-between; border: 2.5px solid #000; background: #fff; overflow: hidden; }' +
+          'html, body { width: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
+          '.page { width: 100%; box-sizing: border-box; page-break-after: always; page-break-inside: avoid; }' +
           '.page:last-child { page-break-after: avoid; }' +
-          
-          '/* TOP BAR */' +
-          '.tech-header { display: flex; justify-content: flex-end; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 6px; flex-shrink: 0; }' +
-          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-weight: 800; background: #000; color: #fff; padding: 3px 12px; border-radius: 4px; letter-spacing: 1px; }' +
 
-          '/* BODY & RECIPIENT */' +
-          '.body-row { display: flex; justify-content: space-between; align-items: stretch; flex: 1 1 auto; gap: 12px; overflow: hidden; padding: 2px 0; }' +
-          '.dest-col { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: flex-start; }' +
-          '.dest-title { font-family: "JetBrains Mono", monospace; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }' +
-          '.content { flex: 1; word-wrap: break-word; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-start; }' +
+          '/* KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE */' +
+          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 5px 0; }' +
+          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: ' + kdoFontSize + '; font-weight: 800; background: #000; color: #fff; padding: 3px 18px; border-radius: 4px; letter-spacing: 2px; text-align: center; }' +
+
+          '/* MAIN LABEL BOX */' +
+          '.label-box { border: 2px solid #000; background: #fff; padding: ' + boxPadding + '; box-sizing: border-box; }' +
+
+          '/* BODY ROW: RECIPIENT ON LEFT, QR ON TOP RIGHT */' +
+          '.body-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }' +
+          '.dest-col { flex: 1; min-width: 0; }' +
+          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: ' + destTitleFontSize + '; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 5px; letter-spacing: 0.5px; text-transform: uppercase; }' +
+          '.content { word-wrap: break-word; }' +
           '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
+          '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
 
-          '/* QR & CROSSHAIR BOX */' +
-          '.qr-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1.5px dashed #555; padding-left: 10px; }' +
-          '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; }' +
+          '/* QR & CROSSHAIR BOX (TOP RIGHT LOCATION) */' +
+          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1.5px dashed #555; padding-left: 10px; }' +
+          '.qr-crosshair-wrap { position: relative; padding: 5px; display: inline-block; }' +
           '.qr-code-img { display: block; background: #fff; }' +
           '.ch-tl { position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-left: 2px solid #000; }' +
           '.ch-tr { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-right: 2px solid #000; }' +
           '.ch-bl { position: absolute; bottom: 0; left: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-left: 2px solid #000; }' +
           '.ch-br { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-right: 2px solid #000; }' +
-          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 6px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
-          '.scan-tag { font-family: "JetBrains Mono", monospace; font-weight: 700; color: #444; margin-top: 3px; letter-spacing: 0.5px; text-align: center; }' +
+          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: ' + trackingFontSize + '; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 5px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
+          '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: ' + scanTagFontSize + '; font-weight: 700; color: #444; margin-top: 2px; letter-spacing: 0.5px; text-align: center; }' +
 
           '/* FOOTER SECURITY NOTE */' +
-          '.note { margin-top: auto; padding-top: 6px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; }' +
-          '.note-alert { font-family: "JetBrains Mono", monospace; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
+          '.note { border-top: 1.5px solid #000; padding-top: 5px; padding-bottom: 1px; width: 100%; text-align: center; }' +
+          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: ' + noteFontSize + '; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
         '</style>' +
         '</head><body>' +
         pagesHtml +
@@ -1042,7 +1040,9 @@
       for (var b = 0; b < boxes.length; b++) {
         var box = boxes[b];
         var editable = box.querySelector('.editable');
+        var kdoBtn = box.querySelector('.kdo-btn');
         var codeElem = box.querySelector('.box-unique-code');
+        var label = kdoBtn ? kdoBtn.textContent.trim() : 'KDO';
         var text = editable ? editable.innerText.trim() : '';
         if (!text) text = '[Empty Address Card]';
 
@@ -1053,16 +1053,28 @@
         var qrUrl = generateQRDataUrl(qrText);
 
         var magicPdfSize = getMagicPdfFontSize(text, pageSize);
-        doc.setFontSize(magicPdfSize);
-
         var lines = doc.splitTextToSize(text, colWidth);
-        var lineH = magicPdfSize * 0.52;
-        var blockH = Math.max(lines.length * lineH, qrSz) + 16;
+        var lineH = magicPdfSize * 0.48;
+        var blockH = Math.max(lines.length * lineH, qrSz) + 18;
 
         if (y + blockH > maxH && hasPage) {
           doc.addPage();
           y = 10;
         }
+
+        // KDO / KZO top middle badge in PDF
+        doc.setFillColor(0, 0, 0);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        var badgeW = 18, badgeH = 5.5;
+        var centerX = (pageSize === 'a4' ? 105 : (pageSize === 'a5' ? 74 : 52.5));
+        var badgeX = centerX - (badgeW / 2);
+        doc.roundedRect(badgeX, y, badgeW, badgeH, 1, 1, 'F');
+        doc.text(label, centerX, y + 3.8, { align: 'center' });
+        doc.setTextColor(0, 0, 0);
+        y += badgeH + 3;
+
+        doc.setFontSize(magicPdfSize);
 
         doc.text(lines, 10, y + 5);
 
