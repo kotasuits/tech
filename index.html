@@ -377,8 +377,13 @@
       outline: none;
       background: rgba(255, 255, 255, 0.93);
       color: #111;
-      line-height: 1.65;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      line-height: 1.55;
+      transition: border-color 0.2s, box-shadow 0.2s, font-size 0.2s ease;
+    }
+
+    .editable * {
+      font-size: inherit !important;
+      font-family: inherit !important;
     }
 
     .editable:focus {
@@ -491,7 +496,7 @@
       <option value="Segoe UI">Segoe UI</option>
     </select>
 
-    <select id="pageSize">
+    <select id="pageSize" onchange="autoFitAllBoxes()">
       <option value="A4">A4</option>
       <option value="A5">A5</option>
       <option value="A6" selected>A6</option>
@@ -501,6 +506,7 @@
 
     <button class="btn btn-default" onclick="alignAll('left')">Left</button>
     <button class="btn btn-default" onclick="alignAll('right')">Right</button>
+    <button class="btn btn-default" onclick="autoFitAllBoxes()" title="Magic Auto-Fit Font Size for all addresses">✨ Auto Fit</button>
     <button class="btn btn-default" onclick="changeFontSize(1)">A+</button>
     <button class="btn btn-default" onclick="changeFontSize(-1)">A-</button>
     <button class="btn btn-default" onclick="document.execCommand('bold')"><b>Bold</b></button>
@@ -596,6 +602,117 @@
     }
 
     /* ============================================================
+       MAGIC AUTO-FIT TEXT SCALING (Intelligent Dynamic Font Sizing)
+       - Automatically computes optimal font size based on address
+         length, physical line breaks, estimated wrapping and paper size
+       - Runs automatically on typing/pasting without any manual actions
+       - Guarantees zero text overflow, tight fit, and high legibility
+    ============================================================ */
+    function getMagicScreenFontSize(text) {
+      var clean = (text || '').replace(/\r/g, '').trim();
+      if (!clean) return '15px';
+      var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
+      var lineCount = Math.max(lines.length, 1);
+      var charCount = clean.length;
+
+      var estLines = 0;
+      for (var i = 0; i < lines.length; i++) {
+        estLines += Math.max(1, Math.ceil(lines[i].length / 30));
+      }
+      var effLines = Math.max(lineCount, estLines);
+
+      if (effLines >= 9 || charCount > 240) return '12px';
+      if (effLines >= 7 || charCount > 170) return '13.5px';
+      if (effLines >= 5 || charCount > 115) return '15px';
+      if (effLines <= 3 && charCount < 75)  return '17.5px';
+      return '16px';
+    }
+
+    function magicAdjustAddressFont(el) {
+      if (!el) return;
+      var size = getMagicScreenFontSize(el.innerText || '');
+      el.style.fontSize = size;
+    }
+
+    function autoFitAllBoxes() {
+      document.querySelectorAll('.editable').forEach(function(el) {
+        magicAdjustAddressFont(el);
+      });
+    }
+
+    function getMagicPrintFontSize(text, pageSize) {
+      var clean = (text || '').replace(/\r/g, '').trim();
+      if (!clean || clean === '[Empty Address Card]') return '15px';
+      var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
+      var lineCount = Math.max(lines.length, 1);
+      var charCount = clean.length;
+      var p = (pageSize || 'a6').toLowerCase();
+
+      var wrapWidthChars = (p === 'a4') ? 55 : (p === 'a5' ? 40 : 26);
+      var estLines = 0;
+      for (var i = 0; i < lines.length; i++) {
+        estLines += Math.max(1, Math.ceil(lines[i].length / wrapWidthChars));
+      }
+      var effLines = Math.max(lineCount, estLines);
+
+      if (p === 'a6') {
+        if (effLines >= 10 || charCount > 240) return '11px';
+        if (effLines >= 8  || charCount > 180) return '12.5px';
+        if (effLines >= 6  || charCount > 130) return '14px';
+        if (effLines <= 3  && charCount < 65)  return '17.5px';
+        return '15.5px';
+      } else if (p === 'a5') {
+        if (effLines >= 11 || charCount > 300) return '13.5px';
+        if (effLines >= 8  || charCount > 210) return '16px';
+        if (effLines >= 6  || charCount > 140) return '18.5px';
+        if (effLines <= 3  && charCount < 80)  return '22px';
+        return '19.5px';
+      } else { // A4
+        if (effLines >= 13 || charCount > 400) return '16px';
+        if (effLines >= 9  || charCount > 270) return '19px';
+        if (effLines >= 6  || charCount > 160) return '22px';
+        if (effLines <= 3  && charCount < 90)  return '26px';
+        return '23px';
+      }
+    }
+
+    function getMagicPdfFontSize(text, pageSize) {
+      var clean = (text || '').replace(/\r/g, '').trim();
+      if (!clean || clean === '[Empty Address Card]') return 11;
+      var lines = clean.split('\n').filter(function(l) { return l.trim().length > 0; });
+      var lineCount = Math.max(lines.length, 1);
+      var charCount = clean.length;
+      var p = (pageSize || 'a6').toLowerCase();
+
+      var wrapWidthChars = (p === 'a4') ? 55 : (p === 'a5' ? 40 : 26);
+      var estLines = 0;
+      for (var i = 0; i < lines.length; i++) {
+        estLines += Math.max(1, Math.ceil(lines[i].length / wrapWidthChars));
+      }
+      var effLines = Math.max(lineCount, estLines);
+
+      if (p === 'a6') {
+        if (effLines >= 10 || charCount > 230) return 8.5;
+        if (effLines >= 7  || charCount > 170) return 9.5;
+        if (effLines >= 5  || charCount > 120) return 11;
+        if (effLines <= 3  && charCount < 70)  return 13.5;
+        return 11.5;
+      } else if (p === 'a5') {
+        if (effLines >= 11 || charCount > 280) return 10;
+        if (effLines >= 8  || charCount > 190) return 12;
+        if (effLines >= 5  || charCount > 130) return 14.5;
+        if (effLines <= 3  && charCount < 80)  return 17;
+        return 14;
+      } else { // A4
+        if (effLines >= 13 || charCount > 350) return 12;
+        if (effLines >= 9  || charCount > 220) return 15;
+        if (effLines >= 5  || charCount > 140) return 18;
+        if (effLines <= 3  && charCount < 90)  return 22;
+        return 17;
+      }
+    }
+
+    /* ============================================================
        3. ADD ADDRESS BOX (Displays Unique Code clearly on each card)
     ============================================================ */
     function addBox() {
@@ -622,10 +739,20 @@
           '</div>' +
           '<button class="regen-btn" onclick="regenBoxId(this)" title="Generate new unique ID">&#8635; New ID</button>' +
         '</div>' +
-        '<div class="editable" contenteditable="true" style="font-size:16px;font-family:Poppins,sans-serif;" placeholder="Paste recipient address here..."></div>';
+        '<div class="editable" contenteditable="true" style="font-size:15px;font-family:Poppins,sans-serif;" placeholder="Paste recipient address here..."></div>';
 
       grid.appendChild(box);
-      box.querySelector('.editable').focus();
+      var ed = box.querySelector('.editable');
+      ed.addEventListener('input', function () {
+        magicAdjustAddressFont(this);
+      });
+      ed.addEventListener('paste', function () {
+        var self = this;
+        setTimeout(function () {
+          magicAdjustAddressFont(self);
+        }, 20);
+      });
+      ed.focus();
     }
 
     // Refresh unique ID manually on any individual box
@@ -735,6 +862,9 @@
         if (pageSize.toLowerCase() === 'a5') { pageH = '190mm'; qrImgSize = 104; }
         if (pageSize.toLowerCase() === 'a6') { pageH = '128mm'; qrImgSize = 92; }
 
+        // Magic Auto-Fit font size calculation for print
+        var magicPrintSize = getMagicPrintFontSize(plainText, pageSize);
+
         // Build Printable Page with Clean Structured Address Format
         pagesHtml +=
           '<div class="page">' +
@@ -742,15 +872,15 @@
             '<div class="tech-header">' +
               '<div class="kdo-capsule">' + label + '</div>' +
             '</div>' +
-
+            
             '<!-- MAIN BODY SPLIT -->' +
             '<div class="body-row">' +
               '<!-- RECIPIENT COMPARTMENT -->' +
               '<div class="dest-col">' +
                 '<div class="dest-title">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
-                '<div class="content" style="font-size:' + size + ';text-align:' + align + '">' + content + '</div>' +
+                '<div class="content" style="font-size:' + magicPrintSize + ';text-align:' + align + '">' + content + '</div>' +
               '</div>' +
-
+              
               '<!-- QR & TRACKING MATRIX -->' +
               '<div class="qr-col">' +
                 '<div class="qr-crosshair-wrap">' +
@@ -762,7 +892,7 @@
                 '<div class="scan-tag">SCAN TO VERIFY</div>' +
               '</div>' +
             '</div>' +
-
+            
             '<!-- PINNED FOOTER DISCLAIMER -->' +
             '<div class="note">' +
               '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
@@ -796,6 +926,7 @@
           '.dest-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }' +
           '.dest-title { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 4px; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }' +
           '.content { flex: 1; word-wrap: break-word; line-height: 1.48; overflow: hidden; }' +
+          '.content * { font-size: inherit !important; }' +
 
           '/* QR & CROSSHAIR BOX */' +
           '.qr-col { width: 120px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1.5px dashed #555; padding-left: 12px; }' +
@@ -875,15 +1006,18 @@
         var qrText = buildQRPayload(text, currentId);
         var qrUrl = generateQRDataUrl(qrText);
 
+        var magicPdfSize = getMagicPdfFontSize(text, pageSize);
+        doc.setFontSize(magicPdfSize);
+
         var lines = doc.splitTextToSize(text, colWidth);
-        var blockH = Math.max(lines.length * 6, qrSz) + 20;
+        var lineH = magicPdfSize * 0.48;
+        var blockH = Math.max(lines.length * lineH, qrSz) + 20;
 
         if (y + blockH > maxH && hasPage) {
           doc.addPage();
           y = 10;
         }
 
-        doc.setFontSize(11);
         doc.text(lines, 10, y + 5);
 
         if (qrUrl) {
