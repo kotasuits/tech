@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Dancing+Script&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Source+Sans+3:wght@400;700&family=Noto+Sans:wght@400;700&family=Mulish:wght@400;700&family=Quicksand:wght@400;700&family=Josefin+Sans:wght@400;700&family=Fira+Sans:wght@400;700&family=Exo+2:wght@400;700&family=Barlow:wght@400;700&family=Inter:wght@400;700&family=DM+Sans:wght@400;700&family=Work+Sans:wght@400;700&family=Cabin:wght@400;700&family=Karla:wght@400;700&family=Rubik:wght@400;700&family=Jost:wght@400;700&family=Manrope:wght@400;700&family=Pacifico&family=Lobster&family=Comfortaa:wght@400;700&family=Righteous&family=Caveat:wght@400;700&family=JetBrains+Mono:wght@600;700;800&family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Dancing+Script&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Source+Sans+3:wght@400;700&family=Noto+Sans:wght@400;700&family=Mulish:wght@400;700&family=Quicksand:wght@400;700&family=Josefin+Sans:wght@400;700&family=Fira+Sans:wght@400;700&family=Exo+2:wght@400;700&family=Barlow:wght@400;700&family=Inter:wght@400;700&family=DM+Sans:wght@400;700&family=Work+Sans:wght@400;700&family=Cabin:wght@400;700&family=Karla:wght@400;700&family=Rubik:wght@400;700&family=Jost:wght@400;700&family=Manrope:wght@400;700&family=Pacifico&family=Lobster&family=Comfortaa:wght@400;700&family=Righteous&family=Caveat:wght@400;700&family=JetBrains+Mono:wght@600;700;800&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -823,7 +823,11 @@
     }
 
     /* ============================================================
-       4. PRINT FUNCTION (Fresh Trendy Modern Tech Layout)
+       4. PRINT FUNCTION (Keeps Modern Clean Address Format)
+       - Clean high-contrast top bar with KDO badge on the right
+       - Compartmentalized Destination & Verification Matrix
+       - Integrated QR code with corner crosshairs
+       - Fixed unboxing video disclaimer pinned to bottom container
     ============================================================ */
     function printAddresses() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -919,7 +923,7 @@
                   '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
 
-                '<!-- QR & TRACKING MATRIX (ARCHITECTURAL TOP-TO-BOTTOM DASHED DIVIDER) -->' +
+                '<!-- QR & TRACKING MATRIX (ARCHITECTURAL TOP-TO-BOTTOM DIVIDER) -->' +
                 '<div class="qr-col">' +
                   '<div class="qr-crosshair-wrap">' +
                     '<div class="ch-tl"></div><div class="ch-tr"></div>' +
@@ -986,7 +990,7 @@
           '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
 
           '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM ARCHITECTURAL DASHED DIVIDER) */' +
-          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px dashed #09090b; padding: 12px 10px 8px 10px; background: #fafafa; }' +
+          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1px dashed #a1a1aa; padding: 12px 10px 8px 10px; background: #fafafa; }' +
           '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; background: #fff; border-radius: 8px; border: 1px solid #e4e4e7; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }' +
           '.qr-code-img { display: block; }' +
           '.ch-tl { position: absolute; top: 0; left: 0; width: 7px; height: 7px; border-top: 2px solid #09090b; border-left: 2px solid #09090b; border-top-left-radius: 3px; }' +
@@ -1091,13 +1095,15 @@
         doc.setLineWidth(0.6);
         doc.roundedRect(margin, boxTop, boxW, boxH, 2.5, 2.5, 'S');
 
-        // 3. Top-to-bottom vertical divider between address and QR (dashed)
+        // 3. Top-to-bottom vertical divider between address and QR (light, clean small dashes)
         var dividerX = margin + boxW - qrColW;
         var noteY = boxBottom - 6.8;
-        doc.setLineWidth(0.5);
-        doc.setLineDash([2, 1.5], 0);
+        doc.setDrawColor(161, 161, 170);
+        doc.setLineWidth(0.25);
+        doc.setLineDash([1, 1], 0);
         doc.line(dividerX, boxTop, dividerX, noteY);
         doc.setLineDash([]); // Reset to solid for remaining lines
+        doc.setDrawColor(9, 9, 11);
 
         // 4. Header: SHIP TO badge + VERIFIED RECIPIENT
         doc.setFillColor(9, 9, 11);
