@@ -823,7 +823,7 @@
     }
 
     /* ============================================================
-       4. PRINT FUNCTION (Full-Page Monochrome Label Layout)
+       4. PRINT FUNCTION (High-Tech Monochrome Cyber Layout)
     ============================================================ */
     function printAddresses() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -836,39 +836,36 @@
       var pageSize = document.getElementById('pageSize').value;
       var pSize = (pageSize || 'a6').toLowerCase();
 
-      var pageMargin = '2.5mm';
-      var pageHeight = '141.5mm';
-      var boxPadding = '8px 10px';
-      var qrColWidth = '115px';
-      var qrImgSize = 96;
+      var pageMargin = '6mm';
+      var pageHeight = '130mm';
+      var qrColWidth = '118px';
+      var qrImgSize = 92;
       var kdoFontSize = '14px';
       var destTitleFontSize = '9.5px';
-      var trackingFontSize = '10px';
+      var trackingFontSize = '9.5px';
       var scanTagFontSize = '7.5px';
-      var noteFontSize = '10.5px';
+      var noteFontSize = '10px';
 
       if (pSize === 'a5') {
-        pageMargin = '3.5mm';
-        pageHeight = '201.5mm';
-        boxPadding = '12px 14px';
+        pageMargin = '7mm';
+        pageHeight = '190mm';
         qrColWidth = '140px';
-        qrImgSize = 120;
+        qrImgSize = 112;
         kdoFontSize = '17px';
         destTitleFontSize = '11.5px';
         trackingFontSize = '12px';
-        scanTagFontSize = '9px';
-        noteFontSize = '12.5px';
+        scanTagFontSize = '8.5px';
+        noteFontSize = '12px';
       } else if (pSize === 'a4') {
-        pageMargin = '4.5mm';
-        pageHeight = '286mm';
-        boxPadding = '16px 18px';
-        qrColWidth = '170px';
-        qrImgSize = 145;
+        pageMargin = '8mm';
+        pageHeight = '275mm';
+        qrColWidth = '165px';
+        qrImgSize = 135;
         kdoFontSize = '20px';
         destTitleFontSize = '13.5px';
         trackingFontSize = '14px';
-        scanTagFontSize = '10.5px';
-        noteFontSize = '14.5px';
+        scanTagFontSize = '10px';
+        noteFontSize = '14px';
       }
 
       var pagesHtml = '';
@@ -902,7 +899,7 @@
         // Magic Auto-Fit typography calculation for print
         var typo = getMagicPrintTypography(plainText, pageSize);
 
-        // Build Printable Page with KDO Outside on Top Middle + Full Page Label Box Touching Bottom
+        // Build Printable Page with KDO Outside on Top Middle + Tech Cyber Box
         pagesHtml +=
           '<div class="page">' +
             '<!-- KDO/KZO OUTSIDE ON TOP MIDDLE -->' +
@@ -910,7 +907,7 @@
               '<div class="kdo-capsule">' + label + '</div>' +
             '</div>' +
 
-            '<!-- MAIN LABEL BOX (COVERS FULL PAGE, TOUCHES BOTTOM) -->' +
+            '<!-- MAIN LABEL BOX (BALANCED CYBER THEME) -->' +
             '<div class="label-box">' +
               '<div class="body-row">' +
                 '<!-- RECIPIENT COMPARTMENT (DYNAMIC AUTO-FIT) -->' +
@@ -919,7 +916,7 @@
                   '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
 
-                '<!-- QR & TRACKING MATRIX (TOP RIGHT LOCATION) -->' +
+                '<!-- QR & TRACKING MATRIX (TOP-TO-BOTTOM DIVIDER) -->' +
                 '<div class="qr-col">' +
                   '<div class="qr-crosshair-wrap">' +
                     '<div class="ch-tl"></div><div class="ch-tr"></div>' +
@@ -931,7 +928,7 @@
                 '</div>' +
               '</div>' +
 
-              '<!-- PINNED FOOTER DISCLAIMER (TOUCHES BOTTOM) -->' +
+              '<!-- PINNED FOOTER DISCLAIMER -->' +
               '<div class="note">' +
                 '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
               '</div>' +
@@ -946,7 +943,7 @@
 
       if (!hasValidCard) return;
 
-      // Complete print HTML document with Full Page High-Tech Monochrome Styling
+      // Complete print HTML document with High-Tech Monochrome Cyber Styling
       var fullHtml =
         '<!DOCTYPE html><html><head><title>Print ' + pageSize + '</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
@@ -958,22 +955,22 @@
           '.page:last-child { page-break-after: avoid; }' +
 
           '/* KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE */' +
-          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 4px 0; flex-shrink: 0; }' +
+          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 5px 0; flex-shrink: 0; }' +
           '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: ' + kdoFontSize + '; font-weight: 800; background: #000; color: #fff; padding: 3px 18px; border-radius: 4px; letter-spacing: 2px; text-align: center; }' +
 
-          '/* MAIN LABEL BOX (COVERS FULL PAGE, TOUCHES BOTTOM) */' +
-          '.label-box { flex: 1; border: 2px solid #000; background: #fff; padding: ' + boxPadding + '; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; }' +
+          '/* MAIN LABEL BOX */' +
+          '.label-box { flex: 1; border: 2px solid #000; background: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; box-sizing: border-box; }' +
 
-          '/* BODY ROW: RECIPIENT ON LEFT, QR ON TOP RIGHT */' +
-          '.body-row { flex: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; min-height: 0; margin-bottom: 6px; }' +
-          '.dest-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }' +
+          '/* BODY ROW: RECIPIENT ON LEFT, QR ON RIGHT (STRETCHED FOR TOP-TO-BOTTOM DIVIDER) */' +
+          '.body-row { flex: 1; display: flex; justify-content: space-between; align-items: stretch; min-height: 0; }' +
+          '.dest-col { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 10px 14px 8px 12px; }' +
           '.dest-title { font-family: "JetBrains Mono", monospace; font-size: ' + destTitleFontSize + '; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }' +
           '.content { word-wrap: break-word; }' +
           '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
           '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
 
-          '/* QR & CROSSHAIR BOX (TOP RIGHT LOCATION) */' +
-          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 1.5px dashed #555; padding-left: 10px; }' +
+          '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM FULL DIVIDER) */' +
+          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px solid #000; padding: 10px 10px 8px 10px; }' +
           '.qr-crosshair-wrap { position: relative; padding: 5px; display: inline-block; }' +
           '.qr-code-img { display: block; background: #fff; }' +
           '.ch-tl { position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-left: 2px solid #000; }' +
@@ -983,8 +980,8 @@
           '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: ' + trackingFontSize + '; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 5px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
           '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: ' + scanTagFontSize + '; font-weight: 700; color: #444; margin-top: 2px; letter-spacing: 0.5px; text-align: center; }' +
 
-          '/* PINNED BOTTOM SECURITY NOTE (TOUCHES BOTTOM) */' +
-          '.note { border-top: 1.5px solid #000; padding-top: 5px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; margin-top: auto; }' +
+          '/* PINNED BOTTOM SECURITY NOTE */' +
+          '.note { border-top: 2px solid #000; padding: 6px 4px 5px 4px; width: 100%; text-align: center; flex-shrink: 0; margin-top: auto; }' +
           '.note-alert { font-family: "JetBrains Mono", monospace; font-size: ' + noteFontSize + '; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
         '</style>' +
         '</head><body>' +
@@ -1017,7 +1014,7 @@
     }
 
     /* ============================================================
-       5. PDF DOWNLOAD (Matching Full-Page Border & Layout)
+       5. PDF DOWNLOAD (Matching Cyber Layout & Top-to-Bottom Divider)
     ============================================================ */
     function generatePDF() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -1030,10 +1027,10 @@
       var pageSize = document.getElementById('pageSize').value.toLowerCase();
       var doc = new jsPDFLib.jsPDF({ format: pageSize });
 
-      var pageW = 105, pageH = 148, margin = 2.5;
-      var qrSz = 26, qrColW = 32;
-      if (pageSize === 'a5') { pageW = 148; pageH = 210; margin = 3.5; qrSz = 30; qrColW = 36; }
-      if (pageSize === 'a4') { pageW = 210; pageH = 297; margin = 4.5; qrSz = 36; qrColW = 44; }
+      var pageW = 105, pageH = 148, margin = 6;
+      var qrSz = 25, qrColW = 32;
+      if (pageSize === 'a5') { pageW = 148; pageH = 210; margin = 7; qrSz = 29; qrColW = 38; }
+      if (pageSize === 'a4') { pageW = 210; pageH = 297; margin = 8; qrSz = 34; qrColW = 46; }
 
       for (var b = 0; b < boxes.length; b++) {
         if (b > 0) doc.addPage();
@@ -1060,8 +1057,8 @@
         doc.setFontSize(9);
         doc.text(label, centerX, margin + 4, { align: 'center' });
 
-        // 2. Main label box covering full page down to bottom margin
-        var boxTop = margin + badgeH + 1.5;
+        // 2. Main label box (cyber proportions)
+        var boxTop = margin + badgeH + 2;
         var boxBottom = pageH - margin;
         var boxH = boxBottom - boxTop;
         var boxW = pageW - (margin * 2);
@@ -1070,42 +1067,47 @@
         doc.setLineWidth(0.6);
         doc.rect(margin, boxTop, boxW, boxH);
 
-        // 3. Header: SHIP TO // RECIPIENT DETAILS:
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8.5);
-        doc.setFont('Helvetica', 'bold');
-        doc.text('SHIP TO // RECIPIENT DETAILS:', margin + 3, boxTop + 5);
-        doc.setLineWidth(0.3);
-        doc.line(margin + 3, boxTop + 6.5, margin + boxW - qrColW - 2, boxTop + 6.5);
+        // 3. Top-to-bottom vertical divider between address and QR
+        var dividerX = margin + boxW - qrColW;
+        var noteY = boxBottom - 6.5;
+        doc.setLineWidth(0.5);
+        doc.line(dividerX, boxTop, dividerX, noteY);
 
-        // 4. Address lines (dynamic scaling)
+        // 4. Header: SHIP TO // RECIPIENT DETAILS:
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(8);
+        doc.setFont('Helvetica', 'bold');
+        doc.text('SHIP TO // RECIPIENT DETAILS:', margin + 3, boxTop + 4.5);
+        doc.setLineWidth(0.3);
+        doc.line(margin + 3, boxTop + 5.8, dividerX - 2, boxTop + 5.8);
+
+        // 5. Address lines (dynamic scaling)
         var magicPdfSize = getMagicPdfFontSize(text, pageSize);
         doc.setFontSize(magicPdfSize);
         doc.setFont('Helvetica', 'bold');
-        var addrWidth = boxW - qrColW - 6;
+        var addrWidth = dividerX - margin - 5;
         var lines = doc.splitTextToSize(text, addrWidth);
-        doc.text(lines, margin + 3, boxTop + 12);
+        doc.text(lines, margin + 3, boxTop + 11);
 
-        // 5. QR Code column at top right
-        var qrX = margin + boxW - qrColW + 2;
+        // 6. QR Code column at top right
+        var qrX = dividerX + ((qrColW - qrSz) / 2);
         var qrY = boxTop + 3;
         if (qrUrl) {
           doc.addImage(qrUrl, 'PNG', qrX, qrY, qrSz, qrSz);
           doc.setFontSize(7.5);
           doc.setFont('Helvetica', 'bold');
-          doc.text(currentId, qrX + (qrSz / 2), qrY + qrSz + 4, { align: 'center' });
+          doc.text(currentId, dividerX + (qrColW / 2), qrY + qrSz + 4, { align: 'center' });
           doc.setFontSize(6.5);
           doc.setTextColor(80, 80, 80);
-          doc.text('SCAN TO VERIFY', qrX + (qrSz / 2), qrY + qrSz + 7.5, { align: 'center' });
+          doc.text('SCAN TO VERIFY', dividerX + (qrColW / 2), qrY + qrSz + 7.5, { align: 'center' });
         }
 
-        // 6. Bottom note pinned to bottom of label box
-        var noteY = boxBottom - 6;
+        // 7. Bottom note pinned across bottom of label box
         doc.setDrawColor(0, 0, 0);
-        doc.setLineWidth(0.4);
+        doc.setLineWidth(0.5);
         doc.line(margin, noteY, margin + boxW, noteY);
         doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8);
+        doc.setFontSize(7.5);
         doc.setFont('Helvetica', 'bold');
         doc.text('Important : Unboxing video required for any claim.', centerX, boxBottom - 2, { align: 'center' });
 
