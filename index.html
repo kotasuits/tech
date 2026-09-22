@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Dancing+Script&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Source+Sans+3:wght@400;700&family=Noto+Sans:wght@400;700&family=Mulish:wght@400;700&family=Quicksand:wght@400;700&family=Josefin+Sans:wght@400;700&family=Fira+Sans:wght@400;700&family=Exo+2:wght@400;700&family=Barlow:wght@400;700&family=Inter:wght@400;700&family=DM+Sans:wght@400;700&family=Work+Sans:wght@400;700&family=Cabin:wght@400;700&family=Karla:wght@400;700&family=Rubik:wght@400;700&family=Jost:wght@400;700&family=Manrope:wght@400;700&family=Pacifico&family=Lobster&family=Comfortaa:wght@400;700&family=Righteous&family=Caveat:wght@400;700&family=JetBrains+Mono:wght@600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Dancing+Script&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Source+Sans+3:wght@400;700&family=Noto+Sans:wght@400;700&family=Mulish:wght@400;700&family=Quicksand:wght@400;700&family=Josefin+Sans:wght@400;700&family=Fira+Sans:wght@400;700&family=Exo+2:wght@400;700&family=Barlow:wght@400;700&family=Inter:wght@400;700&family=DM+Sans:wght@400;700&family=Work+Sans:wght@400;700&family=Cabin:wght@400;700&family=Karla:wght@400;700&family=Rubik:wght@400;700&family=Jost:wght@400;700&family=Manrope:wght@400;700&family=Pacifico&family=Lobster&family=Comfortaa:wght@400;700&family=Righteous&family=Caveat:wght@400;700&family=JetBrains+Mono:wght@600;700;800&family=Space+Grotesk:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -823,7 +823,7 @@
     }
 
     /* ============================================================
-       4. PRINT FUNCTION (High-Tech Monochrome Cyber Layout)
+       4. PRINT FUNCTION (Fresh Trendy Modern Tech Layout)
     ============================================================ */
     function printAddresses() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -899,38 +899,47 @@
         // Magic Auto-Fit typography calculation for print
         var typo = getMagicPrintTypography(plainText, pageSize);
 
-        // Build Printable Page with KDO Outside on Top Middle + Tech Cyber Box
+        // Build Printable Page with KDO Outside on Top Middle + Fresh Trendy Tech Box
         pagesHtml +=
           '<div class="page">' +
-            '<!-- KDO/KZO OUTSIDE ON TOP MIDDLE -->' +
+            '<!-- KDO/KZO OUTSIDE ON TOP MIDDLE (FRESH FLOATING PILL) -->' +
             '<div class="kdo-outside-wrap">' +
-              '<div class="kdo-capsule">' + label + '</div>' +
+              '<div class="kdo-capsule"><span class="kdo-dot"></span>' + label + '</div>' +
             '</div>' +
 
-            '<!-- MAIN LABEL BOX (BALANCED CYBER THEME) -->' +
+            '<!-- MAIN LABEL BOX (FRESH MODERN ROUNDED TECH FRAME) -->' +
             '<div class="label-box">' +
               '<div class="body-row">' +
-                '<!-- RECIPIENT COMPARTMENT (DYNAMIC AUTO-FIT) -->' +
+                '<!-- RECIPIENT COMPARTMENT -->' +
                 '<div class="dest-col">' +
-                  '<div class="dest-title">&#9660; SHIP TO // RECIPIENT DETAILS:</div>' +
+                  '<div class="dest-header">' +
+                    '<span class="dest-badge">SHIP TO</span>' +
+                    '<span class="dest-sub">VERIFIED RECIPIENT</span>' +
+                  '</div>' +
                   '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
 
-                '<!-- QR & TRACKING MATRIX (TOP-TO-BOTTOM DIVIDER) -->' +
+                '<!-- QR & TRACKING MATRIX (ARCHITECTURAL TOP-TO-BOTTOM DIVIDER) -->' +
                 '<div class="qr-col">' +
                   '<div class="qr-crosshair-wrap">' +
                     '<div class="ch-tl"></div><div class="ch-tr"></div>' +
                     '<div class="ch-bl"></div><div class="ch-br"></div>' +
                     (qrDataUrl ? '<img class="qr-code-img" src="' + qrDataUrl + '" width="' + qrImgSize + '" height="' + qrImgSize + '" alt="QR"/>' : '') +
                   '</div>' +
-                  '<div class="tracking-pill">' + currentId + '</div>' +
+                  '<div class="tracking-pill">' +
+                    '<span class="trk-tag">TRK</span>' +
+                    '<span class="trk-num">' + currentId + '</span>' +
+                  '</div>' +
                   '<div class="scan-tag">SCAN TO VERIFY</div>' +
                 '</div>' +
               '</div>' +
 
-              '<!-- PINNED FOOTER DISCLAIMER -->' +
+              '<!-- PINNED FOOTER DISCLAIMER (TRENDY PILL BANNER) -->' +
               '<div class="note">' +
-                '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
+                '<div class="note-pill">' +
+                  '<span class="note-icon">&#9888;&#65039;</span>' +
+                  '<span class="note-text">Important : Unboxing video required for any claim.</span>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -943,46 +952,59 @@
 
       if (!hasValidCard) return;
 
-      // Complete print HTML document with High-Tech Monochrome Cyber Styling
+      // Complete print HTML document with Fresh Trendy Modern Tech Styling
       var fullHtml =
         '<!DOCTYPE html><html><head><title>Print ' + pageSize + '</title>' +
-        '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
+        '<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">' +
         '<style>' +
           '@page { size: ' + pageSize + ' portrait; margin: ' + pageMargin + '; }' +
           '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }' +
-          'html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
+          'html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', "Plus Jakarta Sans", sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #09090b; }' +
           '.page { width: 100%; height: ' + pageHeight + '; box-sizing: border-box; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; }' +
           '.page:last-child { page-break-after: avoid; }' +
 
-          '/* KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE */' +
-          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 5px 0; flex-shrink: 0; }' +
-          '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: ' + kdoFontSize + '; font-weight: 800; background: #000; color: #fff; padding: 3px 18px; border-radius: 4px; letter-spacing: 2px; text-align: center; }' +
+          '/* KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE - TRENDY FLOATING CAPSULE */' +
+          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 6px 0; flex-shrink: 0; }' +
+          '.kdo-capsule { font-family: "Space Grotesk", sans-serif; font-size: ' + kdoFontSize + '; font-weight: 800; background: #09090b; color: #fff; padding: 4px 22px; border-radius: 999px; letter-spacing: 2.5px; text-align: center; display: inline-flex; align-items: center; gap: 7px; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }' +
+          '.kdo-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display: inline-block; }' +
 
-          '/* MAIN LABEL BOX */' +
-          '.label-box { flex: 1; border: 2px solid #000; background: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; box-sizing: border-box; }' +
+          '/* MAIN LABEL BOX - SLEEK MODERN ROUNDED TECH FRAME */' +
+          '.label-box { flex: 1; border: 2px solid #09090b; border-radius: 12px; background: #fff; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; box-sizing: border-box; overflow: hidden; }' +
 
           '/* BODY ROW: RECIPIENT ON LEFT, QR ON RIGHT (STRETCHED FOR TOP-TO-BOTTOM DIVIDER) */' +
           '.body-row { flex: 1; display: flex; justify-content: space-between; align-items: stretch; min-height: 0; }' +
-          '.dest-col { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 10px 14px 8px 12px; }' +
-          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: ' + destTitleFontSize + '; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }' +
-          '.content { word-wrap: break-word; }' +
+          '.dest-col { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 12px 14px 10px 14px; }' +
+
+          '/* FRESH TRENDY DESTINATION HEADER */' +
+          '.dest-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #09090b; padding-bottom: 5px; margin-bottom: 8px; flex-shrink: 0; }' +
+          '.dest-badge { font-family: "Space Grotesk", sans-serif; font-size: ' + destTitleFontSize + '; font-weight: 800; background: #09090b; color: #fff; padding: 2.5px 8px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; }' +
+          '.dest-sub { font-family: "JetBrains Mono", monospace; font-size: 8px; font-weight: 700; color: #71717a; letter-spacing: 0.8px; text-transform: uppercase; }' +
+
+          '/* ADDRESS CONTENT */' +
+          '.content { flex: 1; word-wrap: break-word; color: #09090b; }' +
           '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
           '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
 
-          '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM FULL DIVIDER) */' +
-          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px solid #000; padding: 10px 10px 8px 10px; }' +
-          '.qr-crosshair-wrap { position: relative; padding: 5px; display: inline-block; }' +
-          '.qr-code-img { display: block; background: #fff; }' +
-          '.ch-tl { position: absolute; top: 0; left: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-left: 2px solid #000; }' +
-          '.ch-tr { position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-top: 2px solid #000; border-right: 2px solid #000; }' +
-          '.ch-bl { position: absolute; bottom: 0; left: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-left: 2px solid #000; }' +
-          '.ch-br { position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 2px solid #000; border-right: 2px solid #000; }' +
-          '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: ' + trackingFontSize + '; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 5px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
-          '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: ' + scanTagFontSize + '; font-weight: 700; color: #444; margin-top: 2px; letter-spacing: 0.5px; text-align: center; }' +
+          '/* QR & CROSSHAIR BOX (TOP-TO-BOTTOM ARCHITECTURAL DIVIDER) */' +
+          '.qr-col { width: ' + qrColWidth + '; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border-left: 2px solid #09090b; padding: 12px 10px 8px 10px; background: #fafafa; }' +
+          '.qr-crosshair-wrap { position: relative; padding: 6px; display: inline-block; background: #fff; border-radius: 8px; border: 1px solid #e4e4e7; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }' +
+          '.qr-code-img { display: block; }' +
+          '.ch-tl { position: absolute; top: 0; left: 0; width: 7px; height: 7px; border-top: 2px solid #09090b; border-left: 2px solid #09090b; border-top-left-radius: 3px; }' +
+          '.ch-tr { position: absolute; top: 0; right: 0; width: 7px; height: 7px; border-top: 2px solid #09090b; border-right: 2px solid #09090b; border-top-right-radius: 3px; }' +
+          '.ch-bl { position: absolute; bottom: 0; left: 0; width: 7px; height: 7px; border-bottom: 2px solid #09090b; border-left: 2px solid #09090b; border-bottom-left-radius: 3px; }' +
+          '.ch-br { position: absolute; bottom: 0; right: 0; width: 7px; height: 7px; border-bottom: 2px solid #09090b; border-right: 2px solid #09090b; border-bottom-right-radius: 3px; }' +
 
-          '/* PINNED BOTTOM SECURITY NOTE */' +
-          '.note { border-top: 2px solid #000; padding: 6px 4px 5px 4px; width: 100%; text-align: center; flex-shrink: 0; margin-top: auto; }' +
-          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: ' + noteFontSize + '; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
+          '/* TWO-TONE TRACKING PILL */' +
+          '.tracking-pill { font-family: "JetBrains Mono", monospace; display: flex; align-items: center; justify-content: center; gap: 5px; border: 1.5px solid #09090b; padding: 3px 6px; margin-top: 7px; border-radius: 6px; background: #fff; width: 100%; box-sizing: border-box; }' +
+          '.trk-tag { background: #09090b; color: #fff; font-size: 7.5px; font-weight: 800; padding: 1.5px 4px; border-radius: 3px; letter-spacing: 0.5px; }' +
+          '.trk-num { font-size: ' + trackingFontSize + '; font-weight: 800; color: #09090b; letter-spacing: 0.5px; }' +
+          '.scan-tag { font-family: "Space Grotesk", sans-serif; font-size: ' + scanTagFontSize + '; font-weight: 700; color: #71717a; margin-top: 4px; letter-spacing: 1.2px; text-align: center; text-transform: uppercase; }' +
+
+          '/* TRENDY BOTTOM DISCLAIMER BANNER */' +
+          '.note { border-top: 2px solid #09090b; padding: 7px 12px; width: 100%; text-align: center; flex-shrink: 0; margin-top: auto; background: #fff; box-sizing: border-box; }' +
+          '.note-pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #f4f4f5; border: 1px solid #e4e4e7; padding: 3px 12px; border-radius: 999px; }' +
+          '.note-icon { font-size: 10px; }' +
+          '.note-text { font-family: "Space Grotesk", sans-serif; font-size: ' + noteFontSize + '; font-weight: 700; color: #09090b; letter-spacing: 0.6px; text-transform: uppercase; }' +
         '</style>' +
         '</head><body>' +
         pagesHtml +
@@ -1014,7 +1036,7 @@
     }
 
     /* ============================================================
-       5. PDF DOWNLOAD (Matching Cyber Layout & Top-to-Bottom Divider)
+       5. PDF DOWNLOAD (Matching Fresh Trendy Modern Layout)
     ============================================================ */
     function generatePDF() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -1048,68 +1070,83 @@
         var qrText = buildQRPayload(text, currentId);
         var qrUrl = generateQRDataUrl(qrText);
 
-        // 1. KDO / KZO top middle capsule badge
-        var badgeW = 20, badgeH = 5.5;
+        // 1. KDO / KZO top middle capsule badge with dot
+        var badgeW = 22, badgeH = 5.5;
         var centerX = pageW / 2;
-        doc.setFillColor(0, 0, 0);
-        doc.roundedRect(centerX - (badgeW / 2), margin, badgeW, badgeH, 1, 1, 'F');
+        doc.setFillColor(9, 9, 11);
+        doc.roundedRect(centerX - (badgeW / 2), margin, badgeW, badgeH, 2.75, 2.75, 'F');
+        doc.setFillColor(34, 197, 94);
+        doc.circle(centerX - 6.5, margin + 2.75, 0.7, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(9);
-        doc.text(label, centerX, margin + 4, { align: 'center' });
+        doc.text(label, centerX + 1.5, margin + 3.9, { align: 'center' });
 
-        // 2. Main label box (cyber proportions)
+        // 2. Main label box with rounded corners
         var boxTop = margin + badgeH + 2;
         var boxBottom = pageH - margin;
         var boxH = boxBottom - boxTop;
         var boxW = pageW - (margin * 2);
 
-        doc.setDrawColor(0, 0, 0);
+        doc.setDrawColor(9, 9, 11);
         doc.setLineWidth(0.6);
-        doc.rect(margin, boxTop, boxW, boxH);
+        doc.roundedRect(margin, boxTop, boxW, boxH, 2.5, 2.5, 'S');
 
         // 3. Top-to-bottom vertical divider between address and QR
         var dividerX = margin + boxW - qrColW;
-        var noteY = boxBottom - 6.5;
+        var noteY = boxBottom - 6.8;
         doc.setLineWidth(0.5);
         doc.line(dividerX, boxTop, dividerX, noteY);
 
-        // 4. Header: SHIP TO // RECIPIENT DETAILS:
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8);
+        // 4. Header: SHIP TO badge + VERIFIED RECIPIENT
+        doc.setFillColor(9, 9, 11);
+        doc.roundedRect(margin + 3, boxTop + 2.5, 14, 3.8, 1, 1, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(6.5);
         doc.setFont('Helvetica', 'bold');
-        doc.text('SHIP TO // RECIPIENT DETAILS:', margin + 3, boxTop + 4.5);
+        doc.text('SHIP TO', margin + 10, boxTop + 5.2, { align: 'center' });
+
+        doc.setTextColor(113, 113, 122);
+        doc.setFontSize(5.5);
+        doc.text('VERIFIED RECIPIENT', dividerX - 2, boxTop + 5.2, { align: 'right' });
+
+        doc.setDrawColor(9, 9, 11);
         doc.setLineWidth(0.3);
-        doc.line(margin + 3, boxTop + 5.8, dividerX - 2, boxTop + 5.8);
+        doc.line(margin + 3, boxTop + 7.2, dividerX - 2, boxTop + 7.2);
 
         // 5. Address lines (dynamic scaling)
         var magicPdfSize = getMagicPdfFontSize(text, pageSize);
         doc.setFontSize(magicPdfSize);
         doc.setFont('Helvetica', 'bold');
+        doc.setTextColor(9, 9, 11);
         var addrWidth = dividerX - margin - 5;
         var lines = doc.splitTextToSize(text, addrWidth);
-        doc.text(lines, margin + 3, boxTop + 11);
+        doc.text(lines, margin + 3, boxTop + 12);
 
         // 6. QR Code column at top right
         var qrX = dividerX + ((qrColW - qrSz) / 2);
         var qrY = boxTop + 3;
         if (qrUrl) {
           doc.addImage(qrUrl, 'PNG', qrX, qrY, qrSz, qrSz);
+          doc.setFillColor(9, 9, 11);
           doc.setFontSize(7.5);
           doc.setFont('Helvetica', 'bold');
           doc.text(currentId, dividerX + (qrColW / 2), qrY + qrSz + 4, { align: 'center' });
-          doc.setFontSize(6.5);
-          doc.setTextColor(80, 80, 80);
-          doc.text('SCAN TO VERIFY', dividerX + (qrColW / 2), qrY + qrSz + 7.5, { align: 'center' });
+          doc.setFontSize(6);
+          doc.setTextColor(113, 113, 122);
+          doc.text('SCAN TO VERIFY', dividerX + (qrColW / 2), qrY + qrSz + 7.2, { align: 'center' });
         }
 
-        // 7. Bottom note pinned across bottom of label box
-        doc.setDrawColor(0, 0, 0);
+        // 7. Bottom note pinned across bottom of label box (pill container)
+        doc.setDrawColor(9, 9, 11);
         doc.setLineWidth(0.5);
         doc.line(margin, noteY, margin + boxW, noteY);
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(7.5);
+
+        doc.setFillColor(244, 244, 245);
+        doc.roundedRect(centerX - 36, boxBottom - 5.5, 72, 4.2, 2, 2, 'F');
+        doc.setTextColor(9, 9, 11);
+        doc.setFontSize(6.5);
         doc.setFont('Helvetica', 'bold');
-        doc.text('Important : Unboxing video required for any claim.', centerX, boxBottom - 2, { align: 'center' });
+        doc.text('Important : Unboxing video required for any claim.', centerX, boxBottom - 2.6, { align: 'center' });
 
         if (codeElem) {
           codeElem.textContent = generateUniqueId();
