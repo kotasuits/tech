@@ -823,11 +823,7 @@
     }
 
     /* ============================================================
-       4. PRINT FUNCTION (Keeps Modern Clean Address Format)
-       - Clean high-contrast top bar with KDO badge on the right
-       - Compartmentalized Destination & Verification Matrix
-       - Integrated QR code with corner crosshairs
-       - Fixed unboxing video disclaimer pinned to bottom container
+       4. PRINT FUNCTION (Full-Page Monochrome Label Layout)
     ============================================================ */
     function printAddresses() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -840,7 +836,8 @@
       var pageSize = document.getElementById('pageSize').value;
       var pSize = (pageSize || 'a6').toLowerCase();
 
-      var pageMargin = '3mm';
+      var pageMargin = '2.5mm';
+      var pageHeight = '141.5mm';
       var boxPadding = '8px 10px';
       var qrColWidth = '115px';
       var qrImgSize = 96;
@@ -851,7 +848,8 @@
       var noteFontSize = '10.5px';
 
       if (pSize === 'a5') {
-        pageMargin = '4mm';
+        pageMargin = '3.5mm';
+        pageHeight = '201.5mm';
         boxPadding = '12px 14px';
         qrColWidth = '140px';
         qrImgSize = 120;
@@ -861,7 +859,8 @@
         scanTagFontSize = '9px';
         noteFontSize = '12.5px';
       } else if (pSize === 'a4') {
-        pageMargin = '5mm';
+        pageMargin = '4.5mm';
+        pageHeight = '286mm';
         boxPadding = '16px 18px';
         qrColWidth = '170px';
         qrImgSize = 145;
@@ -900,17 +899,18 @@
         var qrText = buildQRPayload(plainText, currentId);
         var qrDataUrl = generateQRDataUrl(qrText);
 
-        // Magic Auto-Fit typography calculation for print (tight, no extra spaces)
+        // Magic Auto-Fit typography calculation for print
         var typo = getMagicPrintTypography(plainText, pageSize);
 
-        // Build Printable Page with KDO Outside on Top Middle + Clean Label Box
+        // Build Printable Page with KDO Outside on Top Middle + Full Page Label Box Touching Bottom
         pagesHtml +=
           '<div class="page">' +
-            '<!-- KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE -->' +
+            '<!-- KDO/KZO OUTSIDE ON TOP MIDDLE -->' +
             '<div class="kdo-outside-wrap">' +
               '<div class="kdo-capsule">' + label + '</div>' +
             '</div>' +
-            '<!-- MAIN LABEL BOX -->' +
+
+            '<!-- MAIN LABEL BOX (COVERS FULL PAGE, TOUCHES BOTTOM) -->' +
             '<div class="label-box">' +
               '<div class="body-row">' +
                 '<!-- RECIPIENT COMPARTMENT (DYNAMIC AUTO-FIT) -->' +
@@ -919,7 +919,7 @@
                   '<div class="content" style="font-size:' + typo.fontSize + ';line-height:' + typo.lineHeight + ';text-align:' + align + ';font-weight:600;">' + content + '</div>' +
                 '</div>' +
 
-                '<!-- QR & TRACKING MATRIX (ORIGINAL LOCATION: TOP RIGHT) -->' +
+                '<!-- QR & TRACKING MATRIX (TOP RIGHT LOCATION) -->' +
                 '<div class="qr-col">' +
                   '<div class="qr-crosshair-wrap">' +
                     '<div class="ch-tl"></div><div class="ch-tr"></div>' +
@@ -931,7 +931,7 @@
                 '</div>' +
               '</div>' +
 
-              '<!-- PINNED FOOTER DISCLAIMER -->' +
+              '<!-- PINNED FOOTER DISCLAIMER (TOUCHES BOTTOM) -->' +
               '<div class="note">' +
                 '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
               '</div>' +
@@ -946,28 +946,28 @@
 
       if (!hasValidCard) return;
 
-      // Complete print HTML document with High-Tech Monochrome Print Styling
+      // Complete print HTML document with Full Page High-Tech Monochrome Styling
       var fullHtml =
         '<!DOCTYPE html><html><head><title>Print ' + pageSize + '</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
         '<style>' +
           '@page { size: ' + pageSize + ' portrait; margin: ' + pageMargin + '; }' +
           '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }' +
-          'html, body { width: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
-          '.page { width: 100%; box-sizing: border-box; page-break-after: always; page-break-inside: avoid; }' +
+          'html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: ' + fontFamily + ', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color: #000; }' +
+          '.page { width: 100%; height: ' + pageHeight + '; box-sizing: border-box; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; }' +
           '.page:last-child { page-break-after: avoid; }' +
 
           '/* KDO/KZO OUTSIDE ON LABEL BOX TOP MIDDLE */' +
-          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 5px 0; }' +
+          '.kdo-outside-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 4px 0; flex-shrink: 0; }' +
           '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: ' + kdoFontSize + '; font-weight: 800; background: #000; color: #fff; padding: 3px 18px; border-radius: 4px; letter-spacing: 2px; text-align: center; }' +
 
-          '/* MAIN LABEL BOX */' +
-          '.label-box { border: 2px solid #000; background: #fff; padding: ' + boxPadding + '; box-sizing: border-box; }' +
+          '/* MAIN LABEL BOX (COVERS FULL PAGE, TOUCHES BOTTOM) */' +
+          '.label-box { flex: 1; border: 2px solid #000; background: #fff; padding: ' + boxPadding + '; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; min-height: 0; }' +
 
           '/* BODY ROW: RECIPIENT ON LEFT, QR ON TOP RIGHT */' +
-          '.body-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }' +
-          '.dest-col { flex: 1; min-width: 0; }' +
-          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: ' + destTitleFontSize + '; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 5px; letter-spacing: 0.5px; text-transform: uppercase; }' +
+          '.body-row { flex: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; min-height: 0; margin-bottom: 6px; }' +
+          '.dest-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }' +
+          '.dest-title { font-family: "JetBrains Mono", monospace; font-size: ' + destTitleFontSize + '; font-weight: 800; border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; flex-shrink: 0; }' +
           '.content { word-wrap: break-word; }' +
           '.content, .content * { font-family: inherit !important; font-size: inherit !important; line-height: inherit !important; font-weight: inherit !important; }' +
           '.content p, .content div { margin: 0 !important; padding: 0 !important; }' +
@@ -983,8 +983,8 @@
           '.tracking-pill { font-family: "JetBrains Mono", monospace; font-size: ' + trackingFontSize + '; font-weight: 800; border: 1.5px solid #000; padding: 2px 4px; margin-top: 5px; text-align: center; letter-spacing: 0.5px; border-radius: 3px; background: #f4f4f5; width: 100%; box-sizing: border-box; }' +
           '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: ' + scanTagFontSize + '; font-weight: 700; color: #444; margin-top: 2px; letter-spacing: 0.5px; text-align: center; }' +
 
-          '/* FOOTER SECURITY NOTE */' +
-          '.note { border-top: 1.5px solid #000; padding-top: 5px; padding-bottom: 1px; width: 100%; text-align: center; }' +
+          '/* PINNED BOTTOM SECURITY NOTE (TOUCHES BOTTOM) */' +
+          '.note { border-top: 1.5px solid #000; padding-top: 5px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; margin-top: auto; }' +
           '.note-alert { font-family: "JetBrains Mono", monospace; font-size: ' + noteFontSize + '; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
         '</style>' +
         '</head><body>' +
@@ -1017,7 +1017,7 @@
     }
 
     /* ============================================================
-       5. PDF DOWNLOAD
+       5. PDF DOWNLOAD (Matching Full-Page Border & Layout)
     ============================================================ */
     function generatePDF() {
       var boxes = document.querySelectorAll('.addr-box');
@@ -1030,14 +1030,13 @@
       var pageSize = document.getElementById('pageSize').value.toLowerCase();
       var doc = new jsPDFLib.jsPDF({ format: pageSize });
 
-      var colWidth = 180, maxH = 280, qrSz = 36, qrX = 162;
-      if (pageSize === 'a5') { colWidth = 105; maxH = 198; qrSz = 30; qrX = 112; }
-      if (pageSize === 'a6') { colWidth = 68; maxH = 138; qrSz = 26; qrX = 75; }
-
-      var y = 10;
-      var hasPage = false;
+      var pageW = 105, pageH = 148, margin = 2.5;
+      var qrSz = 26, qrColW = 32;
+      if (pageSize === 'a5') { pageW = 148; pageH = 210; margin = 3.5; qrSz = 30; qrColW = 36; }
+      if (pageSize === 'a4') { pageW = 210; pageH = 297; margin = 4.5; qrSz = 36; qrColW = 44; }
 
       for (var b = 0; b < boxes.length; b++) {
+        if (b > 0) doc.addPage();
         var box = boxes[b];
         var editable = box.querySelector('.editable');
         var kdoBtn = box.querySelector('.kdo-btn');
@@ -1052,40 +1051,63 @@
         var qrText = buildQRPayload(text, currentId);
         var qrUrl = generateQRDataUrl(qrText);
 
-        var magicPdfSize = getMagicPdfFontSize(text, pageSize);
-        var lines = doc.splitTextToSize(text, colWidth);
-        var lineH = magicPdfSize * 0.48;
-        var blockH = Math.max(lines.length * lineH, qrSz) + 18;
-
-        if (y + blockH > maxH && hasPage) {
-          doc.addPage();
-          y = 10;
-        }
-
-        // KDO / KZO top middle badge in PDF
+        // 1. KDO / KZO top middle capsule badge
+        var badgeW = 20, badgeH = 5.5;
+        var centerX = pageW / 2;
         doc.setFillColor(0, 0, 0);
+        doc.roundedRect(centerX - (badgeW / 2), margin, badgeW, badgeH, 1, 1, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(9);
-        var badgeW = 18, badgeH = 5.5;
-        var centerX = (pageSize === 'a4' ? 105 : (pageSize === 'a5' ? 74 : 52.5));
-        var badgeX = centerX - (badgeW / 2);
-        doc.roundedRect(badgeX, y, badgeW, badgeH, 1, 1, 'F');
-        doc.text(label, centerX, y + 3.8, { align: 'center' });
+        doc.text(label, centerX, margin + 4, { align: 'center' });
+
+        // 2. Main label box covering full page down to bottom margin
+        var boxTop = margin + badgeH + 1.5;
+        var boxBottom = pageH - margin;
+        var boxH = boxBottom - boxTop;
+        var boxW = pageW - (margin * 2);
+
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.6);
+        doc.rect(margin, boxTop, boxW, boxH);
+
+        // 3. Header: SHIP TO // RECIPIENT DETAILS:
         doc.setTextColor(0, 0, 0);
-        y += badgeH + 3;
+        doc.setFontSize(8.5);
+        doc.setFont('Helvetica', 'bold');
+        doc.text('SHIP TO // RECIPIENT DETAILS:', margin + 3, boxTop + 5);
+        doc.setLineWidth(0.3);
+        doc.line(margin + 3, boxTop + 6.5, margin + boxW - qrColW - 2, boxTop + 6.5);
 
+        // 4. Address lines (dynamic scaling)
+        var magicPdfSize = getMagicPdfFontSize(text, pageSize);
         doc.setFontSize(magicPdfSize);
+        doc.setFont('Helvetica', 'bold');
+        var addrWidth = boxW - qrColW - 6;
+        var lines = doc.splitTextToSize(text, addrWidth);
+        doc.text(lines, margin + 3, boxTop + 12);
 
-        doc.text(lines, 10, y + 5);
-
+        // 5. QR Code column at top right
+        var qrX = margin + boxW - qrColW + 2;
+        var qrY = boxTop + 3;
         if (qrUrl) {
-          doc.addImage(qrUrl, 'PNG', qrX, y, qrSz, qrSz);
-          doc.setFontSize(8);
-          doc.text(currentId, qrX, y + qrSz + 4);
+          doc.addImage(qrUrl, 'PNG', qrX, qrY, qrSz, qrSz);
+          doc.setFontSize(7.5);
+          doc.setFont('Helvetica', 'bold');
+          doc.text(currentId, qrX + (qrSz / 2), qrY + qrSz + 4, { align: 'center' });
+          doc.setFontSize(6.5);
+          doc.setTextColor(80, 80, 80);
+          doc.text('SCAN TO VERIFY', qrX + (qrSz / 2), qrY + qrSz + 7.5, { align: 'center' });
         }
 
-        y += blockH;
-        hasPage = true;
+        // 6. Bottom note pinned to bottom of label box
+        var noteY = boxBottom - 6;
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.4);
+        doc.line(margin, noteY, margin + boxW, noteY);
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(8);
+        doc.setFont('Helvetica', 'bold');
+        doc.text('Important : Unboxing video required for any claim.', centerX, boxBottom - 2, { align: 'center' });
 
         if (codeElem) {
           codeElem.textContent = generateUniqueId();
