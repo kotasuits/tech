@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberPrint // Tech Label Engine</title>
+  <title>Custom PDF & Print Maker</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&family=Roboto:wght@400;700&family=Inter:wght@400;600;700&family=DM+Sans:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Dancing+Script&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Oswald:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Source+Sans+3:wght@400;700&family=Noto+Sans:wght@400;700&family=Mulish:wght@400;700&family=Quicksand:wght@400;700&family=Josefin+Sans:wght@400;700&family=Fira+Sans:wght@400;700&family=Exo+2:wght@400;700&family=Barlow:wght@400;700&family=Inter:wght@400;700&family=DM+Sans:wght@400;700&family=Work+Sans:wght@400;700&family=Cabin:wght@400;700&family=Karla:wght@400;700&family=Rubik:wght@400;700&family=Jost:wght@400;700&family=Manrope:wght@400;700&family=Pacifico&family=Lobster&family=Comfortaa:wght@400;700&family=Righteous&family=Caveat:wght@400;700&family=JetBrains+Mono:wght@600;700;800&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -20,96 +20,47 @@
     }
 
     :root {
-      --bg: #060913;
-      --bg-card: rgba(10, 16, 32, 0.82);
-      --card-border: rgba(0, 240, 255, 0.18);
-      --card-hover-border: rgba(0, 240, 255, 0.55);
-      --cyan: #00f0ff;
-      --cyan-glow: rgba(0, 240, 255, 0.35);
-      --green: #00ff9d;
-      --green-glow: rgba(0, 255, 157, 0.35);
-      --purple: #a855f7;
+      --bg: #0a0f1e;
+      --card: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
       --text: #f1f5f9;
-      --text-dim: #94a3b8;
-      --text-muted: #64748b;
-      --danger: #ff3366;
+      --muted: #94a3b8;
     }
 
     body {
       font-family: 'Outfit', sans-serif;
       background: var(--bg);
       background-image:
-        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 240, 255, 0.12), transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(168, 85, 247, 0.14), transparent 60%);
-      background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59, 130, 246, 0.18), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(139, 92, 246, 0.18), transparent);
       color: var(--text);
       min-height: 100vh;
-      padding: 24px 20px 60px;
+      padding: 28px 20px 60px;
     }
 
-    /* Cyber Header */
     header {
       text-align: center;
-      margin-bottom: 22px;
-      position: relative;
-    }
-
-    .hud-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 3px 12px;
-      border-radius: 20px;
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .hud-pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: blink 1.6s infinite ease-in-out;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
+      margin-bottom: 24px;
     }
 
     header h1 {
-      font-size: clamp(1.7rem, 4.2vw, 2.7rem);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #00f0ff 0%, #38bdf8 50%, #a855f7 100%);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
     }
 
     header p {
-      color: var(--text-dim);
+      color: var(--muted);
       font-size: 0.9rem;
-      margin-top: 4px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      letter-spacing: 0.3px;
+      margin-top: 6px;
     }
 
-    /* Navigation */
     nav {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 22px;
@@ -119,164 +70,132 @@
       text-decoration: none;
       color: #93c5fd;
       font-weight: 600;
-      font-size: 0.88rem;
-      padding: 8px 18px;
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      border-radius: 8px;
-      background: rgba(10, 16, 32, 0.7);
-      backdrop-filter: blur(12px);
-      transition: all 0.22s;
+      font-size: 0.9rem;
+      padding: 9px 20px;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 50px;
+      background: rgba(59, 130, 246, 0.1);
+      backdrop-filter: blur(10px);
+      transition: all 0.25s;
       display: flex;
       align-items: center;
       gap: 7px;
-      font-family: 'JetBrains Mono', monospace;
     }
 
     nav a:hover,
     nav a.on {
-      background: rgba(0, 240, 255, 0.15);
-      border-color: var(--cyan);
-      color: #ffffff;
-      box-shadow: 0 0 16px var(--cyan-glow);
+      background: rgba(59, 130, 246, 0.3);
+      border-color: rgba(59, 130, 246, 0.7);
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.25);
+      color: white;
     }
 
-    /* Cyber Toolbar */
     .toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 9px;
       justify-content: center;
       align-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--card-border);
+      background: var(--card);
+      border: 1px solid var(--border);
       backdrop-filter: blur(20px);
-      border-radius: 14px;
-      padding: 14px 20px;
+      border-radius: 16px;
+      padding: 16px 20px;
       margin-bottom: 28px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.02);
-      position: relative;
-    }
-
-    .toolbar::before {
-      content: 'CONTROL // HUD';
-      position: absolute;
-      top: -9px;
-      left: 20px;
-      background: #060913;
-      padding: 0 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--cyan);
-      letter-spacing: 1px;
-      border-left: 2px solid var(--cyan);
-      border-right: 2px solid var(--cyan);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     .divider {
       width: 1px;
-      height: 28px;
-      background: rgba(0, 240, 255, 0.18);
+      height: 30px;
+      background: var(--border);
       flex-shrink: 0;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 9px 16px;
-      font-size: 13.5px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
+      gap: 5px;
+      padding: 9px 15px;
+      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
       border-radius: 8px;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.22s;
       white-space: nowrap;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .btn-default {
-      background: rgba(0, 240, 255, 0.08);
-      color: var(--cyan);
-      border-color: rgba(0, 240, 255, 0.25);
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.35);
     }
 
     .btn-default:hover {
-      background: rgba(0, 240, 255, 0.2);
-      border-color: var(--cyan);
-      color: white;
-      box-shadow: 0 0 12px var(--cyan-glow);
+      background: rgba(59, 130, 246, 0.3);
+      border-color: rgba(59, 130, 246, 0.65);
       transform: translateY(-1px);
     }
 
     .btn-add {
-      background: linear-gradient(135deg, #00ff9d, #059669);
-      color: #042217;
-      border-color: #00ff9d;
-      font-weight: 800;
-      box-shadow: 0 0 18px var(--green-glow);
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: white;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
     }
 
     .btn-add:hover {
+      opacity: 0.88;
       transform: translateY(-2px);
-      box-shadow: 0 0 26px var(--green-glow);
-      filter: brightness(1.1);
     }
 
     .btn-pdf {
-      background: rgba(56, 189, 248, 0.15);
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.35);
     }
 
     .btn-pdf:hover {
-      background: rgba(56, 189, 248, 0.28);
-      border-color: #38bdf8;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+      background: rgba(16, 185, 129, 0.3);
+      border-color: rgba(16, 185, 129, 0.65);
       transform: translateY(-1px);
     }
 
     .btn-print {
-      background: linear-gradient(135deg, #00f0ff, #a855f7);
-      color: #04091a;
-      font-weight: 800;
-      border: none;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
     }
 
     .btn-print:hover {
+      opacity: 0.88;
       transform: translateY(-2px);
-      box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
-      filter: brightness(1.1);
     }
 
     select {
-      padding: 9px 12px;
-      font-size: 13px;
-      font-family: 'JetBrains Mono', monospace;
+      padding: 9px 13px;
+      font-size: 14px;
+      font-family: 'Outfit', sans-serif;
       font-weight: 600;
-      background: #090e1a;
-      color: var(--cyan);
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text);
+      border: 1px solid var(--border);
       border-radius: 8px;
       cursor: pointer;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
     }
 
-    select:hover, select:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan-glow);
+    select:hover {
+      border-color: rgba(59, 130, 246, 0.5);
     }
 
     select option {
-      background: #090e1a;
-      color: white;
+      background: #1e293b;
     }
 
-    /* Grid & Cyber Address Cards */
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -287,28 +206,32 @@
     .addr-box {
       width: calc(33.33% - 14px);
       min-width: 310px;
-      background: var(--bg-card);
-      border: 1px solid var(--card-border);
-      border-left: 3px solid var(--cyan);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 50px 16px 16px;
       position: relative;
       backdrop-filter: blur(16px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      transition: all 0.25s;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      transition: border-color 0.25s, box-shadow 0.25s;
       animation: fadeUp 0.3s ease both;
     }
 
     .addr-box:hover {
-      border-color: var(--card-hover-border);
-      border-left-color: var(--green);
-      box-shadow: 0 12px 35px rgba(0, 240, 255, 0.12), 0 0 20px rgba(0, 240, 255, 0.08);
-      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.35);
+      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.12);
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .box-topbar {
@@ -321,29 +244,27 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 12px;
-      border-bottom: 1px solid rgba(0, 240, 255, 0.14);
-      background: rgba(0, 240, 255, 0.03);
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
     }
 
     .kdo-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      font-weight: 800;
+      font-family: 'Dancing Script', cursive;
+      font-size: 17px;
       color: #c4b5fd;
-      background: rgba(168, 85, 247, 0.18);
-      border: 1px solid rgba(168, 85, 247, 0.45);
+      background: none;
+      border: none;
       cursor: pointer;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 6px;
-      transition: all 0.2s;
-      letter-spacing: 1px;
+      transition: background 0.2s;
+      flex-shrink: 0;
     }
 
     .kdo-btn:hover {
-      background: rgba(168, 85, 247, 0.35);
-      box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+      background: rgba(139, 92, 246, 0.2);
     }
 
     .box-actions {
@@ -353,101 +274,93 @@
     }
 
     .lock-btn {
-      font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 5px;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      background: rgba(56, 189, 248, 0.12);
-      color: #7dd3fc;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .lock-btn:hover {
-      background: rgba(56, 189, 248, 0.3);
-      color: white;
+      background: rgba(239, 68, 68, 0.28);
     }
 
     .del-btn {
-      font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 5px;
-      border: 1px solid rgba(255, 51, 102, 0.4);
-      background: rgba(255, 51, 102, 0.1);
-      color: #fda4af;
+      border: 1px solid rgba(100, 116, 139, 0.4);
+      background: rgba(100, 116, 139, 0.1);
+      color: #94a3b8;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .del-btn:hover {
-      background: rgba(255, 51, 102, 0.35);
-      color: white;
-      box-shadow: 0 0 10px rgba(255, 51, 102, 0.4);
+      background: rgba(239, 68, 68, 0.22);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.4);
     }
 
-    /* CYBER UNIQUE CODE BAR */
+    /* CLEAR PROMINENT UNIQUE CODE BAR */
     .box-code-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(0, 240, 255, 0.06);
-      border: 1px solid rgba(0, 240, 255, 0.25);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
       border-radius: 8px;
-      padding: 7px 11px;
-      margin-bottom: 12px;
-      position: relative;
+      padding: 6px 10px;
+      margin-bottom: 10px;
     }
 
     .code-label-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .code-title {
       font-size: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      color: var(--cyan);
+      font-weight: 700;
+      color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.5px;
     }
 
     .box-unique-code {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: 1px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.8px;
       user-select: all;
-      text-shadow: 0 0 8px var(--cyan-glow);
     }
 
     .regen-btn {
-      background: rgba(0, 240, 255, 0.12);
-      border: 1px solid rgba(0, 240, 255, 0.35);
-      color: var(--cyan);
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #7dd3fc;
       border-radius: 6px;
-      padding: 3px 9px;
+      padding: 2px 8px;
       font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       transition: all 0.2s;
     }
 
     .regen-btn:hover {
-      background: rgba(0, 240, 255, 0.25);
-      border-color: var(--cyan);
+      background: rgba(56, 189, 248, 0.3);
+      border-color: rgba(56, 189, 248, 0.7);
       color: white;
-      box-shadow: 0 0 10px var(--cyan-glow);
     }
 
     .editable {
@@ -456,21 +369,21 @@
       max-height: 300px;
       overflow-y: auto;
       word-wrap: break-word;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 11px;
       border-radius: 8px;
       font-size: 15px;
       font-family: 'Poppins', sans-serif;
       outline: none;
-      background: #ffffff;
-      color: #0f172a;
-      line-height: 1.6;
-      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.93);
+      color: #111;
+      line-height: 1.65;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .editable:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.25);
+      border-color: rgba(59, 130, 246, 0.7);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
 
     .editable[contenteditable="false"] {
@@ -482,14 +395,12 @@
       width: 100%;
       text-align: center;
       padding: 60px 20px;
-      color: var(--text-dim);
-      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
     }
 
     .empty-state .icon {
-      font-size: 3.2rem;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 0 15px var(--cyan-glow));
+      font-size: 3.5rem;
+      margin-bottom: 14px;
     }
 
     @media (max-width: 768px) {
@@ -506,13 +417,13 @@
       }
 
       .btn {
-        padding: 8px 11px;
-        font-size: 12px;
+        padding: 9px 11px;
+        font-size: 13px;
       }
 
       select {
-        font-size: 12px;
-        padding: 7px 9px;
+        font-size: 13px;
+        padding: 8px 10px;
       }
     }
   </style>
@@ -521,9 +432,8 @@
 <body>
 
   <header>
-    <div class="hud-badge"><span class="hud-pulse"></span> SYSTEM ACTIVE // LOGISTICS OS v4.2</div>
-    <h1>⚡ CYBERPRINT // LABEL ENGINE</h1>
-    <p>TECH-POWERED DISPATCH // HIGH-PRECISION RECIPIENT &amp; DYNAMIC QR SUITE</p>
+    <h1>&#128230; Custom PDF &amp; Print Maker</h1>
+    <p>Create, format and print shipping addresses with auto QR codes</p>
   </header>
 
   <nav>
@@ -536,35 +446,55 @@
 
   <div class="toolbar">
 
-    <button class="btn btn-add" onclick="addBox()">&#10133; NEW PARCEL</button>
+    <button class="btn btn-add" onclick="addBox()">&#10133; Add Box</button>
 
     <div class="divider"></div>
 
     <select id="fontFamily" onchange="applyFont()">
       <option value="Poppins" selected>Poppins</option>
       <option value="Roboto">Roboto</option>
-      <option value="Inter">Inter</option>
-      <option value="DM Sans">DM Sans</option>
-      <option value="JetBrains Mono">JetBrains Mono</option>
-      <option value="Space Grotesk">Space Grotesk</option>
-      <option value="Outfit">Outfit</option>
-      <option value="Montserrat">Montserrat</option>
       <option value="Open Sans">Open Sans</option>
       <option value="Lato">Lato</option>
+      <option value="Montserrat">Montserrat</option>
       <option value="Raleway">Raleway</option>
       <option value="Nunito">Nunito</option>
       <option value="Oswald">Oswald</option>
+      <option value="Inter">Inter</option>
+      <option value="DM Sans">DM Sans</option>
       <option value="Work Sans">Work Sans</option>
       <option value="Barlow">Barlow</option>
+      <option value="Fira Sans">Fira Sans</option>
+      <option value="Exo 2">Exo 2</option>
+      <option value="Cabin">Cabin</option>
+      <option value="Karla">Karla</option>
+      <option value="Rubik">Rubik</option>
+      <option value="Jost">Jost</option>
+      <option value="Manrope">Manrope</option>
+      <option value="Mulish">Mulish</option>
+      <option value="Quicksand">Quicksand</option>
+      <option value="Josefin Sans">Josefin Sans</option>
+      <option value="Ubuntu">Ubuntu</option>
+      <option value="PT Sans">PT Sans</option>
+      <option value="Source Sans 3">Source Sans 3</option>
+      <option value="Noto Sans">Noto Sans</option>
+      <option value="Merriweather">Merriweather</option>
+      <option value="Playfair Display">Playfair Display</option>
+      <option value="Pacifico">Pacifico</option>
+      <option value="Lobster">Lobster</option>
+      <option value="Comfortaa">Comfortaa</option>
+      <option value="Righteous">Righteous</option>
+      <option value="Caveat">Caveat</option>
       <option value="Dancing Script">Dancing Script</option>
       <option value="Arial">Arial</option>
+      <option value="Times New Roman">Times New Roman</option>
+      <option value="Courier New">Courier New</option>
       <option value="Segoe UI">Segoe UI</option>
     </select>
 
     <select id="pageSize">
-      <option value="A4">A4 [Sheet]</option>
-      <option value="A5">A5 [Standard]</option>
-      <option value="A6" selected>A6 [Thermal/Pocket]</option>
+      <option value="A4">A4</option>
+      <option value="A5">A5</option>
+      <option value="A6" selected>A6</option>
     </select>
 
     <div class="divider"></div>
@@ -577,15 +507,15 @@
 
     <div class="divider"></div>
 
-    <button class="btn btn-pdf" onclick="generatePDF()">💾 EXPORT PDF</button>
-    <button class="btn btn-print" onclick="printAddresses()">&#128424; PRINT DISPATCH</button>
+    <button class="btn btn-pdf" onclick="generatePDF()">Download PDF</button>
+    <button class="btn btn-print" onclick="printAddresses()">&#128424; Print</button>
 
   </div>
 
   <div id="grid" class="grid">
     <div class="empty-state" id="emptyState">
-      <div class="icon">📦</div>
-      <p>CLICK <strong>[ NEW PARCEL ]</strong> TO INITIALIZE DISPATCH CARD</p>
+      <div class="icon">&#128221;</div>
+      <p>Click <strong>Add Box</strong> to create your first address card</p>
     </div>
   </div>
 
@@ -681,16 +611,16 @@
         '<div class="box-topbar">' +
           '<button class="kdo-btn" onclick="toggleKdo(this)">KDO</button>' +
           '<div class="box-actions">' +
-            '<button class="lock-btn" onclick="toggleLock(this)">LOCK</button>' +
-            '<button class="del-btn"  onclick="removeBox(this)">PURGE</button>' +
+            '<button class="lock-btn" onclick="toggleLock(this)">Lock</button>' +
+            '<button class="del-btn"  onclick="removeBox(this)">X</button>' +
           '</div>' +
         '</div>' +
         '<div class="box-code-bar">' +
           '<div class="code-label-group">' +
-            '<span class="code-title">&#128230; TRACK ID:</span>' +
+            '<span class="code-title">&#128230; Tracking ID:</span>' +
             '<strong class="box-unique-code">' + uid + '</strong>' +
           '</div>' +
-          '<button class="regen-btn" onclick="regenBoxId(this)" title="Generate new unique ID">&#8635; REGEN</button>' +
+          '<button class="regen-btn" onclick="regenBoxId(this)" title="Generate new unique ID">&#8635; New ID</button>' +
         '</div>' +
         '<div class="editable" contenteditable="true" style="font-size:16px;font-family:Poppins,sans-serif;" placeholder="Paste recipient address here..."></div>';
 
@@ -715,8 +645,8 @@
         box.remove();
         if (!document.querySelector('.addr-box')) {
           document.getElementById('grid').innerHTML =
-            '<div class="empty-state" id="emptyState"><div class="icon">📦</div>' +
-            '<p>CLICK <strong>[ NEW PARCEL ]</strong> TO INITIALIZE DISPATCH CARD</p></div>';
+            '<div class="empty-state" id="emptyState"><div class="icon">&#128221;</div>' +
+            '<p>Click <strong>Add Box</strong> to create your first address card</p></div>';
         }
       }, 180);
     }
@@ -725,7 +655,7 @@
       var ed = btn.closest('.addr-box').querySelector('.editable');
       var locked = ed.contentEditable === 'false';
       ed.contentEditable = locked ? 'true' : 'false';
-      btn.textContent = locked ? 'LOCK' : 'UNLOCK';
+      btn.textContent = locked ? 'Lock' : 'Unlock';
     }
 
     function toggleKdo(btn) {
@@ -754,8 +684,8 @@
     }
 
     /* ============================================================
-       4. FUTURISTIC TECH PRINT LAYOUT
-       - Crisp high-tech logistics template with aerospace tech borders
+       4. PRINT FUNCTION (Keeps Modern Clean Address Format)
+       - Clean high-contrast top bar with KDO badge on the right
        - Compartmentalized Destination & Verification Matrix
        - Integrated QR code with corner crosshairs
        - Fixed unboxing video disclaimer pinned to bottom container
@@ -805,15 +735,11 @@
         if (pageSize.toLowerCase() === 'a5') { pageH = '190mm'; qrImgSize = 104; }
         if (pageSize.toLowerCase() === 'a6') { pageH = '128mm'; qrImgSize = 92; }
 
-        // Build Tech Cyber Printable Page
+        // Build Printable Page with Clean Structured Address Format
         pagesHtml +=
           '<div class="page">' +
-            '<!-- TECH HEADER BAR -->' +
+            '<!-- TOP BAR WITH KDO BADGE -->' +
             '<div class="tech-header">' +
-              '<div class="brand-group">' +
-                '<span class="brand-title">&#9889; PRIORITY DISPATCH // EXPRESS LOGISTICS</span>' +
-                '<span class="brand-sub">AUTHENTICATED PARCEL DELIVERY SPECIFICATION</span>' +
-              '</div>' +
               '<div class="kdo-capsule">' + label + '</div>' +
             '</div>' +
 
@@ -837,10 +763,9 @@
               '</div>' +
             '</div>' +
 
-            '<!-- TECH PINNED FOOTER -->' +
+            '<!-- PINNED FOOTER DISCLAIMER -->' +
             '<div class="note">' +
-              '<span class="note-alert">&#9888;&#65039; MANDATORY UNBOXING VIDEO REQUIRED FOR DAMAGE / MISSING CLAIMS</span>' +
-              '<span class="note-foot">TAMPER-EVIDENT DISPATCH &#183; SECURE TRANSIT PROTOCOL</span>' +
+              '<span class="note-alert">&#9888;&#65039; Important : Unboxing video required for any claim.</span>' +
             '</div>' +
           '</div>';
 
@@ -854,7 +779,7 @@
 
       // Complete print HTML document with High-Tech Monochrome Print Styling
       var fullHtml =
-        '<!DOCTYPE html><html><head><title>Tech Print ' + pageSize + '</title>' +
+        '<!DOCTYPE html><html><head><title>Print ' + pageSize + '</title>' +
         '<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">' +
         '<style>' +
           '@page { size: ' + pageSize + ' portrait; margin: 8mm; }' +
@@ -862,11 +787,8 @@
           '.page { width: 100%; height: ' + pageH + '; min-height: ' + pageH + '; box-sizing: border-box; padding: 12px; position: relative; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; justify-content: space-between; border: 2.5px solid #000; background: #fff; }' +
           '.page:last-child { page-break-after: avoid; }' +
           
-          '/* TECH HEADER */' +
-          '.tech-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 7px; margin-bottom: 10px; flex-shrink: 0; }' +
-          '.brand-group { display: flex; flex-direction: column; gap: 2px; }' +
-          '.brand-title { font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 800; letter-spacing: 0.5px; }' +
-          '.brand-sub { font-family: "JetBrains Mono", monospace; font-size: 8px; color: #444; letter-spacing: 0.4px; }' +
+          '/* TOP BAR */' +
+          '.tech-header { display: flex; justify-content: flex-end; align-items: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px; flex-shrink: 0; }' +
           '.kdo-capsule { font-family: "JetBrains Mono", monospace; font-size: 15px; font-weight: 800; background: #000; color: #fff; padding: 3px 12px; border-radius: 4px; letter-spacing: 1px; }' +
 
           '/* BODY & RECIPIENT */' +
@@ -887,9 +809,8 @@
           '.scan-tag { font-family: "JetBrains Mono", monospace; font-size: 7.5px; font-weight: 700; color: #444; margin-top: 3px; letter-spacing: 0.5px; text-align: center; }' +
 
           '/* FOOTER SECURITY NOTE */' +
-          '.note { margin-top: auto; padding-top: 6px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; display: flex; flex-direction: column; gap: 2px; }' +
-          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: 9.5px; font-weight: 800; color: #000; letter-spacing: 0.4px; }' +
-          '.note-foot { font-family: "JetBrains Mono", monospace; font-size: 7.5px; font-weight: 600; color: #555; letter-spacing: 0.5px; }' +
+          '.note { margin-top: auto; padding-top: 8px; padding-bottom: 2px; width: 100%; text-align: center; flex-shrink: 0; border-top: 2px solid #000; }' +
+          '.note-alert { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 800; color: #000; letter-spacing: 0.3px; }' +
         '</style>' +
         '</head><body>' +
         pagesHtml +
@@ -979,7 +900,7 @@
         }
       }
 
-      doc.save('tech_shipping_labels.pdf');
+      doc.save('shipping_labels.pdf');
     }
 
     // Start with one box
